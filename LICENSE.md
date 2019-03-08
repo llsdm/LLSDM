@@ -3,7 +3,7 @@
 |You are free to:|Вы можете свободно:|
 | ------------- |------------------|
 |**Share** — copy and redistribute the material in any medium or format|**Распространять** - копировать и распространять материал в любом виде или формате|
-|**Adapt** — remix, transform, and build upon the material|**Изменять** - трансформировать и брать материал за основу|
+|**Adapt** — remix, transform, and build upon the material|**Изменять** - объединять, трансформировать и брать материал за основу|
 |The licensor cannot revoke these freedoms as long as you follow the license terms.|Лицензиар не может отозвать эти разрешения пока вы следуете лицензии.|
 
 |Under the following terms:|На следующих условиях:|
