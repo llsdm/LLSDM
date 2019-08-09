@@ -5,8 +5,8 @@
 
 #define MYSQL_HOST				"localhost"
 #define MYSQL_USER				"root"
-#define MYSQL_DATABASE			"llsdm"
-#define MYSQL_PASSWORD			""
+#define MYSQL_DATABASE				"llsdm"
+#define MYSQL_PASSWORD				""
 
 new
 	MySQL:mysql_connect_ID;
