@@ -425,7 +425,7 @@ stock GetVehTrunk(vehicleid, &Float:x, &Float:y, &Float:z, Float:distance, &Floa
 {
 	new 
 		Float:dis;
-	dis = dis/2 - distance;
+	dis = dis/2.0 - distance;
 	GetVehiclePos(vehicleid, x, y, z);
 	GetVehicleZAngle(vehicleid, angle);
 	x += (dis * floatsin(-angle, degrees));
@@ -438,7 +438,7 @@ stock IsPlayerNearTheVehicle(playerid, Float:distance)
 	new
 		Float:x, Float:y, Float:z, 
 		Float:angle,Float:dis;
-	dis = dis/2 - distance;
+	dis = dis/2.0 - distance;
 	GetPlayerPos(playerid, x, y, z);
 	GetPlayerFacingAngle(playerid, angle);
 	x += (dis * floatsin(-angle+180.0, degrees));
