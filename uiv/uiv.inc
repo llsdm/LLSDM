@@ -432,27 +432,3 @@ stock GetVehTrunk(vehicleid, &Float:x, &Float:y, &Float:z, Float:distance, &Floa
 	y += (dis * floatcos(-angle, degrees));
 	return 1;
 }
-
-stock IsPlayerNearTheVehicle(playerid, Float:distance)
-{
-	new
-		Float:x, Float:y, Float:z, 
-		Float:angle,Float:dis;
-	dis = dis/2.0 - distance;
-	GetPlayerPos(playerid, x, y, z);
-	GetPlayerFacingAngle(playerid, angle);
-	x += (dis * floatsin(-angle+180.0, degrees));
-	y += (dis * floatcos(-angle+180.0, degrees));
-
-	for (new i = 1, j = GetVehiclePoolSize(); i <= j; i++)
-	{
-		if (IsVehicleStreamedIn(i, playerid))
-		{
-			dis = GetVehicleDistanceFromPoint(i, x, y, z);
-			if (dis < distance)
-				return i;
-		}
-	}
-
-	return 0;
-}
