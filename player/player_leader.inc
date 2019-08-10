@@ -7,7 +7,7 @@ const
 	LEADER_AUTO_SAVE = LLSDM_PARAMS_ON;
 
 static
-	leader_id;
+	leader_id = -1;
 
 stock GetKillLeader()
 {
