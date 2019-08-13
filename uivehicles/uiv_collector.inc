@@ -117,7 +117,7 @@ static stock TakePlayerBagWithMoney(playerid, vehicleid)
 forward BigMoneyRewardTimer(playerid);
 public BigMoneyRewardTimer(playerid)
 {
-		if (IsPlayerAFK(playerid))
+	if (IsPlayerAFK(playerid))
 	{
 		if (++collector_afk_checker{playerid} == UIV_C_TIME_AFK)
 		{
