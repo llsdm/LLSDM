@@ -10,7 +10,7 @@ const
 	Float:AIR_FLIGHT = 400.0,
 	Float:AIR_SPEED = 200.0;
 
-enum
+static enum
 	spawn_info
 	{
 		Float:spawn_pos_x,
