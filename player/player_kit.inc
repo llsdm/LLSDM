@@ -3,7 +3,7 @@
 #endif
 #define PLAYER_KIT
 
-#define AttachKitToHand(%0)				SetPlayerAttachedObject(%0, AMMU_SLOT_KIT, 11736, 5, 0.108999, 0.054000, -0.033999, 81.800155, 56.799980, -99.399986, 0.515999, 0.479999, 1.000000)
+#define AttachKitToHand(%0)		SetPlayerAttachedObject(%0, AMMU_SLOT_KIT, 11736, 5, 0.108999, 0.054000, -0.033999, 81.800155, 56.799980, -99.399986, 0.515999, 0.479999, 1.000000)
 
 static enum
 {
