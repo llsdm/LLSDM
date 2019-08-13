@@ -3,7 +3,7 @@
 #endif
 #define UIV_AMBULANCE
 
-enum
+static enum
 {
 	AMBULANCE_DIALOG_D1 = 20,
 	AMBULANCE_DIALOG_D2
