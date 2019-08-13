@@ -6,7 +6,7 @@
 static
 	bool:animloading[MAX_PLAYERS char];
 
-stock PreloadAnimLib(playerid, animlib[])
+stock PreloadAnimLib(playerid, const animlib[])
 {
 	return ApplyAnimation(playerid, animlib, "null", 0.0, 0, 0, 0, 0, 0);
 }
