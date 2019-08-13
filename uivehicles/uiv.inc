@@ -21,7 +21,6 @@ const
 	UIV_OPEN_DOORS = LLSDM_PARAMS_ON;
 
 const //vehicleid
-{
 	AMBULANCE = 416,
 	COLLECTOR = 428,
 	TRUCK = 433,
@@ -29,8 +28,7 @@ const //vehicleid
 	POLICE_LS = 596,
 	POLICE_SF = 597,
 	POLICE_LV = 598,
-	POLICE_JEEP = 599
-}
+	POLICE_JEEP = 599;
 
 enum 
 	uiv_info
