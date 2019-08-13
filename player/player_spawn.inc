@@ -3,12 +3,14 @@
 #endif
 #define PLAYER_SPAWN
 
-const
+static enum
+{
 	MAX_AIR_OBJECTS = 4,
 	Float:SPAWN_DISTANCE_AREA = 1500.0,
 	Float:AIR_DISTANCE = 4500.0,
 	Float:AIR_FLIGHT = 400.0,
-	Float:AIR_SPEED = 200.0;
+	Float:AIR_SPEED = 200.0
+}
 
 static enum
 	spawn_info
