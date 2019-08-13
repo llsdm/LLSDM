@@ -6,9 +6,9 @@
 static
 	bool:animloading[MAX_PLAYERS char];
 
-PreloadAnimLib(playerid, animlib[])
+stock PreloadAnimLib(playerid, animlib[])
 {
-	ApplyAnimation(playerid,animlib,"null",0.0,0,0,0,0,0);
+	return ApplyAnimation(playerid, animlib, "null", 0.0, 0, 0, 0, 0, 0);
 }
 
 public OnPlayerSpawn(playerid)
@@ -44,6 +44,16 @@ public OnPlayerSpawn(playerid)
 	return 1;
 }
 
+#if defined _ALS_OnPlayerSpawn
+	#undef OnPlayerSpawn
+#else
+	#define _ALS_OnPlayerSpawn
+#endif
+#define OnPlayerSpawn fix_la_OnPlayerSpawn
+#if defined fix_la_OnPlayerSpawn
+forward fix_la_OnPlayerSpawn(playerid);
+#endif
+
 public OnPlayerConnect(playerid)
 {
 	animloading{playerid} = false;
@@ -55,22 +65,12 @@ public OnPlayerConnect(playerid)
 	return 1;
 }
 
-#if defined _ALS_OnPlayerSpawn
-	#undef OnPlayerSpawn
-#else
-	#define _ALS_OnPlayerSpawn
-#endif
-#define OnPlayerSpawn fix_la_OnPlayerSpawn
-#if  defined fix_la_OnPlayerSpawn
-forward fix_la_OnPlayerSpawn(playerid);
-#endif
-
 #if defined _ALS_OnPlayerConnect
 	#undef OnPlayerConnect
 #else
 	#define _ALS_OnPlayerConnect
 #endif
 #define OnPlayerConnect fix_la_OnPlayerConnect
-#if  defined fix_la_OnPlayerConnect
+#if defined fix_la_OnPlayerConnect
 forward fix_la_OnPlayerConnect(playerid);
 #endif
