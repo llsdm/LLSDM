@@ -10,7 +10,7 @@ const
 	UIV_C_TIME_TO_HACH = 3,
 	UIV_C_TIME_TO_RESPAWN_BAG = 15000,
 	UIV_C_TIME_TO_TIMER = 5000,
-	UIV_C_TIME_AFK = 20,
+	UIV_C_TIME_IN_AFK = 20,
 	UIV_C_AUTO_SAVE = LLSDM_PARAMS_ON;
 
 
@@ -119,7 +119,7 @@ public BigMoneyRewardTimer(playerid)
 {
 	if (IsPlayerAFK(playerid))
 	{
-		if (++collector_afk_checker{playerid} == UIV_C_TIME_AFK)
+		if (++collector_afk_checker{playerid} == UIV_C_TIME_IN_AFK)
 		{
 			new
 				vehicleid = collector_vehicleid[playerid];
@@ -134,15 +134,14 @@ public BigMoneyRewardTimer(playerid)
 			uiv[vehicleid][uiv_drop] = true;
 			uiv[vehicleid][uiv_hack] = false;
 
-			collector_afk_checker{playerid} =
+			collector_vehicleid[playerid] =
 			collector_timer_money[playerid] =
-			collector_vehicleid[playerid] = 0;
-
+			collector_afk_checker{playerid} = 0;
 		}
-		
+
 		return 0;
 	}
-		
+
 	pInfo[playerid][pExpLife]++;
 	pInfo[playerid][pExp]++;
 	pInfo[playerid][pMoney]++;
