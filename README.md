@@ -4,6 +4,10 @@
 + **F** — открыть транспорт
 + **Y** — открыть инвентарь
 
+Pawn compiler
+---
+[Pawn compiler v3.10.9](https://github.com/pawn-lang/compiler/releases/tag/v3.10.9)
+
 Plugins
 ---
 + [MySQL R41-4](https://github.com/pBlueG/SA-MP-MySQL/releases/tag/R41-4)
