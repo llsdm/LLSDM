@@ -5,10 +5,12 @@
 
 #define AttachKitToHand(%0)				SetPlayerAttachedObject(%0, AMMU_SLOT_KIT, 11736, 5, 0.108999, 0.054000, -0.033999, 81.800155, 56.799980, -99.399986, 0.515999, 0.479999, 1.000000)
 
-const
+static enum
+{
 	KIT_AUTO_SAVE = LLSDM_PARAMS_ON,
 	Float:KIT_HEALTH = 30.0,
-	KIT_TIMER_ANIM = 3500;
+	KIT_TIMER_ANIM = 3500
+}
 
 static
 	kit_timer[MAX_PLAYERS];
