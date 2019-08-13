@@ -115,16 +115,17 @@ static stock TakePlayerBagWithMoney(playerid, vehicleid)
 forward BigMoneyRewardTimer(playerid);
 public BigMoneyRewardTimer(playerid)
 {
+	if (IsPlayerAFK(playerid))
+		return 0;
+		
 	pInfo[playerid][pExpLife]++;
 	pInfo[playerid][pExp]++;
 	pInfo[playerid][pMoney]++;
 	pInfo[playerid][pBagMoney]++;
 
 	#if UIV_C_AUTO_SAVE == LLSDM_PARAMS_ON
-	{
 		if (pInfo[playerid][pBagMoney] % 100 == 0)
 			SaveExp(playerid);
-	}
 	#endif
 	
 	return 1;
