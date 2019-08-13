@@ -51,7 +51,7 @@ public OnPlayerSpawn(playerid)
 #endif
 #define OnPlayerSpawn fix_la_OnPlayerSpawn
 #if defined fix_la_OnPlayerSpawn
-forward fix_la_OnPlayerSpawn(playerid);
+	forward fix_la_OnPlayerSpawn(playerid);
 #endif
 
 public OnPlayerConnect(playerid)
@@ -72,5 +72,5 @@ public OnPlayerConnect(playerid)
 #endif
 #define OnPlayerConnect fix_la_OnPlayerConnect
 #if defined fix_la_OnPlayerConnect
-forward fix_la_OnPlayerConnect(playerid);
+	forward fix_la_OnPlayerConnect(playerid);
 #endif
