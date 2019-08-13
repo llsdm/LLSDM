@@ -4,7 +4,7 @@
 #define BILLBOARDS
 
 
-enum
+static enum
 	billboard_pos_info
 	{
 		billboard_pos_info_id,
@@ -83,7 +83,7 @@ static const
 		{-3.1, 1.45}
 	};
 
-enum
+static enum
 	b_info
 	{
 		bIndex,
