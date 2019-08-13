@@ -5,13 +5,13 @@
 
 
 enum
-	billboard_info
+	billboard_pos_info
 	{
-		billboard_info_id,
-		Float:billboard_info_x,
-		Float:billboard_info_y,
-		Float:billboard_info_z,
-		Float:billboard_info_a
+		billboard_pos_info_id,
+		Float:billboard_pos_info_x,
+		Float:billboard_pos_info_y,
+		Float:billboard_pos_info_z,
+		Float:billboard_pos_info_a
 	};
 
 const
@@ -41,7 +41,7 @@ const
 	BILLBOARDS_LOGO = BILLBOARD_OBJS_LOGO+(BILLBOARD_SPECIAL_OBJECTS-1)+BILLBOARD_BLOCK_OBJECTS_LOGO;
 
 static const
-	billboard_objects[BILLBOARD_OBJECTS][billboard_info] =
+	billboard_objects[BILLBOARD_OBJECTS][billboard_pos_info] =
 	{
 		{19480, 0.0400, 0.0000, 0.0000},
 		{19480, 0.0600, 0.0000, -0.3500},
@@ -52,7 +52,7 @@ static const
 		{19477, 0.1000, 0.0000, 2.2900},
 		{19477, 0.0600, 0.0000, 1.5500}
 	},
-	billboard_objects_logo[BILLBOARD_OBJS_LOGO-1][billboard_info] =
+	billboard_objects_logo[BILLBOARD_OBJS_LOGO-1][billboard_pos_info] =
 	{
 		{19483, 0.0400, 0.0000, 1.7700},
 		{19479, 0.0400, 0.0000, 0.0000}
@@ -275,10 +275,10 @@ stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x
 
 	for (new j = 0; j < BILLBOARD_OBJECTS; j++)
 	{
-		info_id = billboard_objects[j][billboard_info_id],
-		x_1 = billboard_objects[j][billboard_info_x];
+		info_id = billboard_objects[j][billboard_pos_info_id],
+		x_1 = billboard_objects[j][billboard_pos_info_x];
 		y_1 = difference_y/2;
-		z_1 = billboard_objects[j][billboard_info_z];
+		z_1 = billboard_objects[j][billboard_pos_info_z];
 
 		BillboardVector(x_1, y_1, a);
 
@@ -386,10 +386,10 @@ stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 
 		for (new k = 0; k < 2; k++)
 		{
-			info_id = billboard_objects_logo[k][billboard_info_id],
-			x_1 = billboard_objects_logo[k][billboard_info_x];
+			info_id = billboard_objects_logo[k][billboard_pos_info_id],
+			x_1 = billboard_objects_logo[k][billboard_pos_info_x];
 			y_1 = 0.0;
-			z_1 = billboard_objects_logo[k][billboard_info_z];
+			z_1 = billboard_objects_logo[k][billboard_pos_info_z];
 			a_3 = a_2-180.0;
 
 			BillboardVector(x_1, y_1, a_3);
