@@ -20,7 +20,7 @@ const
 
 	UIV_OPEN_DOORS = LLSDM_PARAMS_ON;
 
-static enum //vehicleid
+const //vehicleid
 {
 	AMBULANCE = 416,
 	COLLECTOR = 428,
