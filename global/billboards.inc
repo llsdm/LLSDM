@@ -57,7 +57,7 @@ static const
 		{19483, 0.0400, 0.0000, 1.7700},
 		{19479, 0.0400, 0.0000, 0.0000}
 	},
-	Float:billboard_block_objs_t1[BILLBOARD_BLOCK_OBJECTS][2] =
+	Float:billboard_block_objects_t1[BILLBOARD_BLOCK_OBJECTS][2] =
 	{
 		{6.05, -0.7},
 		{6.05, 0.7},
@@ -66,7 +66,7 @@ static const
 		{0.0, -0.7},
 		{0.0, 0.7}
 	},
-	Float:billboard_block_objs_t2[BILLBOARD_BLOCK_OBJECTS][2] =
+	Float:billboard_block_objects_t2[BILLBOARD_BLOCK_OBJECTS][2] =
 	{
 		{3.8, -1.2},
 		{3.8, 1.2},
@@ -75,7 +75,7 @@ static const
 		{0.0, 0.0},
 		{0.0, 0.0}
 	},
-	Float:billboard_block_objs_t3[BILLBOARD_BLOCK_OBJECTS_LOGO][2] =
+	Float:billboard_block_objects_t3[BILLBOARD_BLOCK_OBJECTS_LOGO][2] =
 	{
 		{3.1, -1.45},
 		{3.1, 1.45},
@@ -98,7 +98,7 @@ enum
 	}
 
 new
-	BillboardInfo[MAX_BILLBOARDS][b_info],
+	billboard_info[MAX_BILLBOARDS][b_info],
 	BILLBOARDS_NUMS_LEADER,
 	BILLBOARDS_NUMS_LOGO;
 
@@ -214,9 +214,9 @@ stock UpdateBillboard(playerid, kills)
 
 	for (new i = 0; i < BILLBOARDS_NUMS_LEADER; i++)
 	{
-		SetDynamicObjectMaterialText(BillboardInfo[i][bLeader][2], 0, string, 120, !"Arial", 35, 0, BILLBOARD_COLOR, 0, 1);
-		SetDynamicObjectMaterialText(BillboardInfo[i][bLeader][4], 0, str_title, 130, !"Arial", 100, 1, BILLBOARD_COLOR, 0, 1);
-		SetDynamicObjectMaterialText(BillboardInfo[i][bLeader][5], 0, str_kills, 130, !"Arial", 180, 1, BILLBOARD_COLOR, 0, 1);
+		SetDynamicObjectMaterialText(billboard_info[i][bLeader][2], 0, string, 120, !"Arial", 35, 0, BILLBOARD_COLOR, 0, 1);
+		SetDynamicObjectMaterialText(billboard_info[i][bLeader][4], 0, str_title, 130, !"Arial", 100, 1, BILLBOARD_COLOR, 0, 1);
+		SetDynamicObjectMaterialText(billboard_info[i][bLeader][5], 0, str_kills, 130, !"Arial", 180, 1, BILLBOARD_COLOR, 0, 1);
 	}
 
 	return 1;
@@ -231,7 +231,7 @@ stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x
 
 	if (modelid == BILLBOARD_GROUP_1)
 	{
-		BillboardInfo[billboardid][bMainLeader] = CreateDynamicObject(BILLBOARD_GROUP_1, x, y, z, 0.0, 0.0, a, -1, -1, -1, 300.0, 300.0);
+		billboard_info[billboardid][bMainLeader] = CreateDynamicObject(BILLBOARD_GROUP_1, x, y, z, 0.0, 0.0, a, -1, -1, -1, 300.0, 300.0);
 
 		x_1 = -0.85;
 		y_1 = 0.0;
@@ -245,7 +245,7 @@ stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x
 		z += z_1;
 		a -= -180.0;
 
-		BillboardInfo[billboardid][bLeader][0] = CreateDynamicObject(19480, x, y, z, 0.0, 0.0, a);
+		billboard_info[billboardid][bLeader][0] = CreateDynamicObject(19480, x, y, z, 0.0, 0.0, a);
 	}
 	else
 	{
@@ -263,14 +263,14 @@ stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x
 		z += z_1;
 		a -= -180.0;
 
-		BillboardInfo[billboardid][bLeader][0] = CreateDynamicObject(19479, x, y, z, 0.0, 0.0, a);
+		billboard_info[billboardid][bLeader][0] = CreateDynamicObject(19479, x, y, z, 0.0, 0.0, a);
 
 		x_1 = 0.85;
 		y_1 = BILLBOARD_GROUP_1_DIFFERENCE_Y*4;
 
 		BillboardVector(x_1, y_1, a);
 
-		BillboardInfo[billboardid][bLeader][1] = CreateDynamicObject(19479, x_2+x_1, y_2+y_1, z, 0.0, 0.0, a);
+		billboard_info[billboardid][bLeader][1] = CreateDynamicObject(19479, x_2+x_1, y_2+y_1, z, 0.0, 0.0, a);
 	}
 
 	for (new j = 0; j < BILLBOARD_OBJECTS; j++)
@@ -282,7 +282,7 @@ stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x
 
 		BillboardVector(x_1, y_1, a);
 
-		BillboardInfo[billboardid][bLeader][j+BILLBOARD_SPECIAL_OBJECTS] = CreateDynamicObject(info_id, x+x_1, y+y_1, z+z_1, 0.0, 0.0, a);
+		billboard_info[billboardid][bLeader][j+BILLBOARD_SPECIAL_OBJECTS] = CreateDynamicObject(info_id, x+x_1, y+y_1, z+z_1, 0.0, 0.0, a);
 
 		x_2 = x+x_1;
 		y_2 = y+y_1;
@@ -294,16 +294,16 @@ stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x
 		if (modelid == BILLBOARD_GROUP_1)
 		{
 			x_1 = -0.6;
-			y_1 = billboard_block_objs_t1[b][0];
-			z_1 = billboard_block_objs_t1[b][1];
+			y_1 = billboard_block_objects_t1[b][0];
+			z_1 = billboard_block_objects_t1[b][1];
 			a_1 = a;
 			type_1 = 1;
 		}
 		else
 		{
 			x_1 = -0.6;
-			y_1 = billboard_block_objs_t2[b][0];
-			z_1 = billboard_block_objs_t2[b][1];
+			y_1 = billboard_block_objects_t2[b][0];
+			z_1 = billboard_block_objects_t2[b][1];
 			a_1 = a;
 
 			if (_:z_1 == 0)
@@ -312,29 +312,29 @@ stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x
 
 		BillboardVector(x_1, y_1, a_1);
 
-		BillboardInfo[billboardid][bLeader][b+m] = CreateDynamicObject(BILLBOARD_BLOCK, x_2+x_1, y_2+y_1, z_2-z_1-1.55, 0.0, 0.0, a_1-90.0, -1, -1, -1, 300.0, 300.0);
+		billboard_info[billboardid][bLeader][b+m] = CreateDynamicObject(BILLBOARD_BLOCK, x_2+x_1, y_2+y_1, z_2-z_1-1.55, 0.0, 0.0, a_1-90.0, -1, -1, -1, 300.0, 300.0);
 	}
 
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][0], 0, !" ", 120, !"Arial", 35, 0, BILLBOARD_BACKGROUND, BILLBOARD_BACKGROUND, 1);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][0], 0, !" ", 120, !"Arial", 35, 0, BILLBOARD_BACKGROUND, BILLBOARD_BACKGROUND, 1);
 	if (modelid == BILLBOARD_GROUP_2)
-		SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][1], 0, !" ", 120, !"Arial", 35, 0, BILLBOARD_BACKGROUND, BILLBOARD_BACKGROUND, 1);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][2], 0, !"ИМЯ ИГРОКА", 120, !"Arial", 35, 0, BILLBOARD_COLOR, 0, 1);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][3], 0, !"_____________", 130, !"Arial", 60, 0, BILLBOARD_COLOR, 0, 1);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][4], 0, !"ЗАГОЛОВОК", 130, !"Arial", 100, 1, BILLBOARD_COLOR, 0, 1);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][5], 0, !"СЧЕТЧИК", 130, !"Arial", 180, 1, BILLBOARD_COLOR, 0, 1);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][6], 0, !"c", 130, !"Webdings", 140, 0, BILLBOARD_COLOR, 0, 1);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][7], 0, !" ", 130, !"Arial", 60, 0, 0, BILLBOARD_BACKGROUND, 1);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][8], 0, !"LLS", 130, !"Arial", 100, 1, BILLBOARD_COLOR, 0, 1);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][9], 0, !"DM", 130, !"Arial", 160, 1, BILLBOARD_COLOR, 0, 1);
+		SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][1], 0, !" ", 120, !"Arial", 35, 0, BILLBOARD_BACKGROUND, BILLBOARD_BACKGROUND, 1);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][2], 0, !"ИМЯ ИГРОКА", 120, !"Arial", 35, 0, BILLBOARD_COLOR, 0, 1);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][3], 0, !"_____________", 130, !"Arial", 60, 0, BILLBOARD_COLOR, 0, 1);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][4], 0, !"ЗАГОЛОВОК", 130, !"Arial", 100, 1, BILLBOARD_COLOR, 0, 1);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][5], 0, !"СЧЕТЧИК", 130, !"Arial", 180, 1, BILLBOARD_COLOR, 0, 1);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][6], 0, !"c", 130, !"Webdings", 140, 0, BILLBOARD_COLOR, 0, 1);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][7], 0, !" ", 130, !"Arial", 60, 0, 0, BILLBOARD_BACKGROUND, 1);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][8], 0, !"LLS", 130, !"Arial", 100, 1, BILLBOARD_COLOR, 0, 1);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][9], 0, !"DM", 130, !"Arial", 160, 1, BILLBOARD_COLOR, 0, 1);
 
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][10], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][11], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][12], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
-	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][13], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][10], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][11], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][12], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+	SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][13], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
 	if (type_1 == 1)
 	{
-		SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][14], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
-		SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][15], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+		SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][14], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+		SetDynamicObjectMaterialText(billboard_info[billboardid][bLeader][15], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
 	}
 
 	return 1;
@@ -347,7 +347,7 @@ stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 		Float:x_1, Float:y_1, Float:z_1, Float:a_1,
 		Float:x_2, Float:y_2, Float:z_2, Float:a_2;
 
-	BillboardInfo[BILLBOARDS_NUMS_LOGO][bMainLogo] = CreateDynamicObject(BILLBOARD_GROUP_3, x, y, z, 0.0, 0.0, a, -1, -1, -1, 300.0, 300.0);
+	billboard_info[BILLBOARDS_NUMS_LOGO][bMainLogo] = CreateDynamicObject(BILLBOARD_GROUP_3, x, y, z, 0.0, 0.0, a, -1, -1, -1, 300.0, 300.0);
 
 	for (new j = 0; j < 2; j++)
 	{
@@ -365,7 +365,7 @@ stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 			z_2 = z+z_1;
 			a_2 = a-180.0+a_1;
 
-			BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][2] = CreateDynamicObject(19479, x_2, y_2, z_2, 0.0, 0.0, a_2-180.0);
+			billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][2] = CreateDynamicObject(19479, x_2, y_2, z_2, 0.0, 0.0, a_2-180.0);
 		}
 		else
 		{
@@ -381,7 +381,7 @@ stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 			z_2 = z+z_1;
 			a_2 = a-180.0+a_1;
 
-			BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][2] = CreateDynamicObject(19479, x_2, y_2, z_2, 0.0, 0.0, a_2);
+			billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][2] = CreateDynamicObject(19479, x_2, y_2, z_2, 0.0, 0.0, a_2);
 		}
 
 		for (new k = 0; k < 2; k++)
@@ -394,28 +394,28 @@ stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 
 			BillboardVector(x_1, y_1, a_3);
 
-			BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][k]  = CreateDynamicObject(info_id, x_2+x_1, y_2+y_1, z_2+z_1, 0.0, 0.0, a_3);
+			billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][k]  = CreateDynamicObject(info_id, x_2+x_1, y_2+y_1, z_2+z_1, 0.0, 0.0, a_3);
 		}
 
 		for (new b = 0, m = BILLBOARD_OBJS_LOGO; b < BILLBOARD_BLOCK_OBJECTS_LOGO; b++)
 		{
 			x_1 = 0.6;
-			y_1 = billboard_block_objs_t3[b][0];
-			z_1 = billboard_block_objs_t3[b][1];
+			y_1 = billboard_block_objects_t3[b][0];
+			z_1 = billboard_block_objects_t3[b][1];
 			a_1 = a_2;
 
 			BillboardVector(x_1, y_1, a_1);
 
-			BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][b+m] = CreateDynamicObject(BILLBOARD_BLOCK, x_2+x_1, y_2+y_1, z_2-z_1, 0.0, 0.0, a_1-90.0, -1, -1, -1, 300.0, 300.0);
+			billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][b+m] = CreateDynamicObject(BILLBOARD_BLOCK, x_2+x_1, y_2+y_1, z_2-z_1, 0.0, 0.0, a_1-90.0, -1, -1, -1, 300.0, 300.0);
 		}	
 
-		SetDynamicObjectMaterialText(BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][0], 0, !"LLS", 130, !"Arial", 255, 1, BILLBOARD_COLOR, BILLBOARD_BACKGROUND_LOGO, 1);
-		SetDynamicObjectMaterialText(BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][1], 0, !"DM", 130, !"Arial", 85, 1, BILLBOARD_COLOR, 0, 1);
-		SetDynamicObjectMaterialText(BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][2], 0, !"c", 130, !"Webdings", 150, 0, BILLBOARD_COLOR, BILLBOARD_BACKGROUND_LOGO, 1);
-		SetDynamicObjectMaterialText(BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][3], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
-		SetDynamicObjectMaterialText(BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][4], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
-		SetDynamicObjectMaterialText(BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][5], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
-		SetDynamicObjectMaterialText(BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][6], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+		SetDynamicObjectMaterialText(billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][0], 0, !"LLS", 130, !"Arial", 255, 1, BILLBOARD_COLOR, BILLBOARD_BACKGROUND_LOGO, 1);
+		SetDynamicObjectMaterialText(billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][1], 0, !"DM", 130, !"Arial", 85, 1, BILLBOARD_COLOR, 0, 1);
+		SetDynamicObjectMaterialText(billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][2], 0, !"c", 130, !"Webdings", 150, 0, BILLBOARD_COLOR, BILLBOARD_BACKGROUND_LOGO, 1);
+		SetDynamicObjectMaterialText(billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][3], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+		SetDynamicObjectMaterialText(billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][4], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+		SetDynamicObjectMaterialText(billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][5], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
+		SetDynamicObjectMaterialText(billboard_info[BILLBOARDS_NUMS_LOGO][bLogo][6], 0, " ", 10, " ", 0, 0, 0, BILLBOARD_BACKGROUND_BLOCK, 0);
 
 		BILLBOARDS_NUMS_LOGO++;
 	}
