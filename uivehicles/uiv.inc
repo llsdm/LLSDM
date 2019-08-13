@@ -20,7 +20,8 @@ const
 
 	UIV_OPEN_DOORS = LLSDM_PARAMS_ON;
 
-const //vehicleid
+static enum //vehicleid
+{
 	AMBULANCE = 416,
 	COLLECTOR = 428,
 	TRUCK = 433,
@@ -28,7 +29,8 @@ const //vehicleid
 	POLICE_LS = 596,
 	POLICE_SF = 597,
 	POLICE_LV = 598,
-	POLICE_JEEP = 599;
+	POLICE_JEEP = 599
+}
 
 enum 
 	uiv_info
@@ -269,6 +271,24 @@ stock HideUIVehicle(vehicleid)
 	return 1;
 }
 
+CMD:v(playerid, params[])
+{
+	static
+		Float:x,
+		Float:y,
+		Float:z,
+		id;
+		
+	id  = strval(params);
+
+	GetPlayerPos(playerid, x, y, z);
+	CreateUIVehicle(id, x, y, z, 90.0);
+	//CreateVehicle(id, x, y, z, 90.0, -1, -1, 0);
+	PutPlayerInVehicle(playerid, 1, 0);
+	//CreateUIVehicle(id, 1557.4998,-1308.3341,16.9039,267.8281);
+	return 1;
+}
+
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
 	if (HOLDING(KEY_SECONDARY_ATTACK))
@@ -289,7 +309,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 					continue;
 
 				dist = uiv[i][uiv_dist];
-				GetVehTrunk(i, x, y, z, dist, a);
+				GetVehicleTrunk(i, x, y, z, dist, a);
 
 				if (IsPlayerInRangeOfPoint(playerid, 2.0, x, y, z))
 				{
@@ -421,7 +441,7 @@ stock TrunkOrRearDoorsOfVehicle(playerid, vehicleid = 0)
 	return 1;
 }
 
-stock GetVehTrunk(vehicleid, &Float:x, &Float:y, &Float:z, Float:distance, &Float:angle)
+stock GetVehicleTrunk(vehicleid, &Float:x, &Float:y, &Float:z, Float:distance, &Float:angle)
 {
 	new 
 		Float:dis;
