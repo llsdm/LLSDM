@@ -10,12 +10,14 @@ const
 	UIV_C_TIME_TO_HACH = 3,
 	UIV_C_TIME_TO_RESPAWN_BAG = 15000,
 	UIV_C_TIME_TO_TIMER = 5000,
+	UIV_C_TIME_AFK = 20,
 	UIV_C_AUTO_SAVE = LLSDM_PARAMS_ON;
 
 
 static
 	collector_vehicleid[MAX_PLAYERS],
-	collector_timer_money[MAX_PLAYERS];
+	collector_timer_money[MAX_PLAYERS],
+	collector_afk_checker[MAX_PLAYERS char];
 
 stock OpenCollectorVehicle(playerid, vehicleid)
 {
@@ -115,13 +117,37 @@ static stock TakePlayerBagWithMoney(playerid, vehicleid)
 forward BigMoneyRewardTimer(playerid);
 public BigMoneyRewardTimer(playerid)
 {
-	if (IsPlayerAFK(playerid))
+		if (IsPlayerAFK(playerid))
+	{
+		if (++collector_afk_checker{playerid} == UIV_C_TIME_AFK)
+		{
+			new
+				vehicleid = collector_vehicleid[playerid];
+
+			SetVehicleParamsCarDoors(vehicleid, 0, 0, 0, 0);
+			KillTimer(collector_timer_money[playerid]);
+			RemovePlayerAttachedObject(playerid, AMMU_SLOT_MONEY_BAG);
+			InvisiblePlayerIcon(playerid);
+
+			uiv[vehicleid][uiv_timer] = 0;
+			uiv[vehicleid][uiv_pickup] = -1;
+			uiv[vehicleid][uiv_drop] = true;
+			uiv[vehicleid][uiv_hack] = false;
+
+			collector_afk_checker{playerid} =
+			collector_timer_money[playerid] =
+			collector_vehicleid[playerid] = 0;
+
+		}
+		
 		return 0;
+	}
 		
 	pInfo[playerid][pExpLife]++;
 	pInfo[playerid][pExp]++;
 	pInfo[playerid][pMoney]++;
 	pInfo[playerid][pBagMoney]++;
+	collector_afk_checker{playerid} = 0;
 
 	#if UIV_C_AUTO_SAVE == LLSDM_PARAMS_ON
 		if (pInfo[playerid][pBagMoney] % 100 == 0)
@@ -213,7 +239,8 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 public OnPlayerDeath(playerid, killerid, reason)
 {
 	pInfo[playerid][pExpLife] =
-	pInfo[playerid][pMoney] = 0;
+	pInfo[playerid][pMoney] =
+	collector_afk_checker{playerid} = 0;
 
 	DeathPlayerWithBagMoney(playerid);
 
@@ -237,6 +264,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 public OnPlayerDisconnect(playerid, reason)
 {
 	DeathPlayerWithBagMoney(playerid);
+	collector_afk_checker{playerid} = 0;
 
 	#if defined collector_OnPlayerDisconnect
 		collector_OnPlayerDisconnect(playerid, reason);
