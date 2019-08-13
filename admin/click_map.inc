@@ -20,6 +20,6 @@ CMD:maptp(playerid)
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
 
 	click_map = !click_map;
-	SendClientMessage(playerid, COLOR_LIME, click_map ? !"Телепорт по метке включен" : !"Телепорт по метке выключен");
-	return 1;
+	
+	return SendClientMessage(playerid, COLOR_LIME, click_map ? !"Телепорт по метке включен" : !"Телепорт по метке выключен");
 }
