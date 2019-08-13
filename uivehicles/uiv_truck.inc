@@ -3,7 +3,7 @@
 #endif
 #define UIV_TRUCK
 
-enum
+static enum
 {
 	UIV_TRUCK_DIALOG_AMMO_ID = 40,
 	UIV_TRUCK_DIALOG_AMMO_NUM_ID
