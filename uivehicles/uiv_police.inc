@@ -3,7 +3,7 @@
 #endif
 #define UIV_POLICE
 
-enum
+static enum
 {
 	POLICE_DIALOGID_WEAPON = 10,
 	POLICE_DIALOGID_SECOND_WEAPON,
