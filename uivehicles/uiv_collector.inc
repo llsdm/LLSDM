@@ -17,7 +17,6 @@ static enum
 	UIV_C_AUTO_SAVE = LLSDM_PARAMS_ON
 }
 
-
 static
 	collector_vehicleid[MAX_PLAYERS],
 	collector_timer_money[MAX_PLAYERS],
