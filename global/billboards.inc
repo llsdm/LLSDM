@@ -3,18 +3,8 @@
 #endif
 #define BILLBOARDS
 
-
 static enum
-	billboard_pos_info
-	{
-		billboard_pos_info_id,
-		Float:billboard_pos_info_x,
-		Float:billboard_pos_info_y,
-		Float:billboard_pos_info_z,
-		Float:billboard_pos_info_a
-	};
-
-const
+{
 	MAX_BILLBOARDS = 200,
 	MAX_BILLBOARDS_LOGO = 200,
 
@@ -34,11 +24,21 @@ const
 	BILLBOARD_COLOR = -1,
 	BILLBOARD_BACKGROUND = -4062975,
 	BILLBOARD_BACKGROUND_LOGO = 0xFFFF8C00,
-	BILLBOARD_BACKGROUND_BLOCK = -16777216;
-
-const
+	BILLBOARD_BACKGROUND_BLOCK = -16777216,
+	
 	BILLBOARDS_LEADER = BILLBOARD_OBJECTS+BILLBOARD_SPECIAL_OBJECTS+BILLBOARD_BLOCK_OBJECTS,
-	BILLBOARDS_LOGO = BILLBOARD_OBJS_LOGO+(BILLBOARD_SPECIAL_OBJECTS-1)+BILLBOARD_BLOCK_OBJECTS_LOGO;
+	BILLBOARDS_LOGO = BILLBOARD_OBJS_LOGO+(BILLBOARD_SPECIAL_OBJECTS-1)+BILLBOARD_BLOCK_OBJECTS_LOGO
+}
+
+static enum
+	billboard_pos_info
+	{
+		billboard_pos_info_id,
+		Float:billboard_pos_info_x,
+		Float:billboard_pos_info_y,
+		Float:billboard_pos_info_z,
+		Float:billboard_pos_info_a
+	}
 
 static const
 	billboard_objects[BILLBOARD_OBJECTS][billboard_pos_info] =
