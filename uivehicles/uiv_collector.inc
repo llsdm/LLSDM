@@ -3,15 +3,19 @@
 #endif
 #define UIV_COLLECTOR
 
-#define YellowPlayerIcon(%0) \
-	(SetPlayerColor(%0, COLOR_YELLOW))
+#if !defined YellowPlayerIcon
+	#define YellowPlayerIcon(%0) \
+		(SetPlayerColor(%0, COLOR_YELLOW))
+#endif
 
-const
+static enum
+{
 	UIV_C_TIME_TO_HACH = 3,
 	UIV_C_TIME_TO_RESPAWN_BAG = 15000,
 	UIV_C_TIME_TO_TIMER = 5000,
 	UIV_C_TIME_IN_AFK = 20,
-	UIV_C_AUTO_SAVE = LLSDM_PARAMS_ON;
+	UIV_C_AUTO_SAVE = LLSDM_PARAMS_ON
+}
 
 
 static
