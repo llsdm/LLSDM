@@ -40,6 +40,20 @@ static enum
 		Float:billboard_pos_info_a
 	}
 
+static enum
+	b_info
+	{
+		bIndex,
+		bObject,
+		bCity,
+		bGroup,
+		bBagBord,
+		bMainLeader,
+		bLeader[BILLBOARDS_LEADER],
+		bMainLogo,
+		bLogo[BILLBOARDS_LOGO]
+	}
+
 static const
 	billboard_objects[BILLBOARD_OBJECTS][billboard_pos_info] =
 	{
@@ -82,20 +96,6 @@ static const
 		{-3.1, -1.45},
 		{-3.1, 1.45}
 	};
-
-static enum
-	b_info
-	{
-		bIndex,
-		bObject,
-		bCity,
-		bGroup,
-		bBagBord,
-		bMainLeader,
-		bLeader[BILLBOARDS_LEADER],
-		bMainLogo,
-		bLogo[BILLBOARDS_LOGO]
-	}
 
 new
 	billboard_info[MAX_BILLBOARDS][b_info],
