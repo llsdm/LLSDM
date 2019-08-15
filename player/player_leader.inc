@@ -60,8 +60,9 @@ stock GetKillLeader()
 
 public OnPlayerDeath(playerid, killerid, reason)
 {
-	pInfo[playerid][pKillsLife] =
 	pInfo[playerid][pMoney] =
+	pInfo[playerid][pExpLife] =
+	pInfo[playerid][pKillsLife] =
 	pInfo[playerid][pTimeKill] = 0;
 	pInfo[playerid][pDeaths]++;
 	
