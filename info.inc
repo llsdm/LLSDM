@@ -14,6 +14,7 @@ enum
 		pSkin,
 		pLife,
 		Float:pHealth,
+		Float:pLastDamage,
 		pExpLife,
 		pExp,
 		pMoney,
