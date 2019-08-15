@@ -73,7 +73,12 @@ public OnPlayerDeath(playerid, killerid, reason)
 	if (killerid != INVALID_PLAYER_ID)
 	{
 		if (playerid == leader_id && playerid != killerid)
-			SendClientMessage(playerid, COLOR_LIME, !"Вы убили лидера");
+		{
+			pInfo[killerid][pExp] += 200;
+			pInfo[killerid][pExpLife] += 200;
+			pInfo[killerid][pMoney] += 100;
+			SendClientMessage(killerid, COLOR_LIME, !"Вы убили лидера");
+		}
 
 		pInfo[killerid][pKillsLife]++;
 		pInfo[killerid][pKills]++;
