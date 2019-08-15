@@ -61,6 +61,7 @@ stock GetKillLeader()
 public OnPlayerDeath(playerid, killerid, reason)
 {
 	pInfo[playerid][pKillsLife] =
+	pInfo[playerid][pMoney] =
 	pInfo[playerid][pTimeKill] = 0;
 	pInfo[playerid][pDeaths]++;
 	
@@ -76,6 +77,9 @@ public OnPlayerDeath(playerid, killerid, reason)
 		pInfo[killerid][pKillsLife]++;
 		pInfo[killerid][pKills]++;
 		pInfo[killerid][pTimeKill] = gettime();
+		pInfo[playerid][pExp] += 100;
+		pInfo[playerid][pExpLife] += 100;
+		pInfo[playerid][pMoney] += 20;
 
 		#if LEADER_AUTO_SAVE == LLSDM_PARAMS_ON
 			SaveDeath(killerid);
