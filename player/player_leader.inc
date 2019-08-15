@@ -7,7 +7,7 @@ const
 	LEADER_AUTO_SAVE = LLSDM_PARAMS_ON;
 
 static
-	leader_id = -1;
+	leaderid = -1;
 
 stock GetKillLeader()
 {
@@ -39,9 +39,9 @@ stock GetKillLeader()
 		}
 	}
 
-	if (leader_id != playerid)
+	if (leaderid != playerid)
 	{
-		leader_id = playerid;
+		leaderid = playerid;
 		format(string, sizeof string, str, pInfo[playerid][pName]);
 		SendClientMessageToAll(COLOR_LIME, string);
 	}
@@ -72,7 +72,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 
 	if (killerid != INVALID_PLAYER_ID)
 	{
-		if (playerid == leader_id && playerid != killerid)
+		if (playerid == leaderid && playerid != killerid)
 		{
 			pInfo[killerid][pExp] += 200;
 			pInfo[killerid][pExpLife] += 200;
