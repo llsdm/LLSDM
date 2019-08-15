@@ -25,7 +25,7 @@ static enum
 	BILLBOARD_BACKGROUND = -4062975,
 	BILLBOARD_BACKGROUND_LOGO = 0xFFFF8C00,
 	BILLBOARD_BACKGROUND_BLOCK = -16777216,
-	
+
 	BILLBOARDS_LEADER = BILLBOARD_OBJECTS+BILLBOARD_SPECIAL_OBJECTS+BILLBOARD_BLOCK_OBJECTS,
 	BILLBOARDS_LOGO = BILLBOARD_OBJS_LOGO+(BILLBOARD_SPECIAL_OBJECTS-1)+BILLBOARD_BLOCK_OBJECTS_LOGO
 }
@@ -97,7 +97,7 @@ static const
 		{-3.1, 1.45}
 	};
 
-new
+static
 	billboard_info[MAX_BILLBOARDS][b_info],
 	BILLBOARDS_NUMS_LEADER,
 	BILLBOARDS_NUMS_LOGO;
@@ -181,17 +181,6 @@ public CreatBillboardsLogo()
 	return 1;
 }
 
-stock BillboardVector(&Float:x, &Float:y, Float:angle)
-{
-	new 
-		Float:cx = x,
-		Float:cy = y; 
-
-	x = cx*floatcos(angle, degrees)-cy*floatsin(angle, degrees); 
-	y = cx*floatsin(angle, degrees)+cy*floatcos(angle, degrees); 
-	return 1;
-}
-
 stock UpdateBillboard(playerid, kills)
 {
 	new
@@ -222,7 +211,7 @@ stock UpdateBillboard(playerid, kills)
 	return 1;
 }
 
-stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x_2, Float:y_2, Float:a)
+static stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x_2, Float:y_2, Float:a)
 {
 	new
 		info_id, type_1,
@@ -340,7 +329,7 @@ stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x
 	return 1;
 }
 
-stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
+static stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 {
 	new
 		info_id,
@@ -420,5 +409,16 @@ stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 		BILLBOARDS_NUMS_LOGO++;
 	}
 
+	return 1;
+}
+
+static stock BillboardVector(&Float:x, &Float:y, Float:angle)
+{
+	new 
+		Float:cx = x,
+		Float:cy = y; 
+
+	x = cx*floatcos(angle, degrees)-cy*floatsin(angle, degrees); 
+	y = cx*floatsin(angle, degrees)+cy*floatcos(angle, degrees); 
 	return 1;
 }
