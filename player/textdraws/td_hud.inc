@@ -81,7 +81,7 @@ static
 
 	PlayerText:td_hud_player_kills[MAX_PLAYERS],
 	PlayerText:td_hud_player_kills_life[MAX_PLAYERS],
-	PlayerText:td_hud_player_weapon_model[MAX_PLAYERS],
+	PlayerText:td_hud_player_weapon_model[MAX_PLAYERS] = {PlayerText:-1, ...},
 	PlayerText:td_hud_player_weapon_name[MAX_PLAYERS],
 	PlayerText:td_hud_player_weapon_ammo[MAX_PLAYERS],
 	PlayerText:td_hud_player_health[MAX_PLAYERS],
@@ -424,6 +424,7 @@ stock UpdateHudWeapon(playerid, weaponid)
 	format(string, sizeof string, "%02i/%02i", ammo, td_hud_weapon_ammo[weaponid]);
 	PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], string);
 
+
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_model[playerid]);
 
 	td_hud_player_weapon_model[playerid] = CreatePlayerTextDraw(playerid, td_hud_weapon_model_position[weaponid][td_hud_weapon_pos_x], td_hud_weapon_model_position[weaponid][td_hud_weapon_pos_y], !"");
@@ -615,6 +616,8 @@ public OnPlayerDisconnect(playerid, reason)
 
 	KillTimer(td_hud_player_timer[playerid]);
 	td_hud_player_timer[playerid] = 0;
+
+	td_hud_player_weapon_model[playerid] = PlayerText:-1;
 
 	#if defined td_hud_OnPlayerDisconnect
 		td_hud_OnPlayerDisconnect(playerid, reason);
