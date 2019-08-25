@@ -62,7 +62,7 @@ static const
 		{356, 629.3333, -10.9259, 0.0, 2.5},
 		{372, 629.3333, -10.9259, 0.0, 2.5},
 		{357, 629.3333, -10.9259, 0.0, 2.5},
-		{358, 629.3333, -10.9259, 0.0, 2.5}
+		{358, 629.3333, -10.9259, 5.0, 2.5}
 	};
 
 static
@@ -101,7 +101,7 @@ public OnGameModeInit()
 	TextDrawSetProportional(td_hud_backgroud[0], 0);
 	TextDrawSetShadow(td_hud_backgroud[0], 0);
 
-	td_hud_backgroud[1] = TextDrawCreate(493.3164, 76.1451, !"LD_SPAC:white");
+	td_hud_backgroud[1] = TextDrawCreate(493.1500, 76.145, !"LD_SPAC:white");
 	TextDrawTextSize(td_hud_backgroud[1], 73.3300, 27.3798);
 	TextDrawAlignment(td_hud_backgroud[1], 1);
 	TextDrawColor(td_hud_backgroud[1], 673720575);
@@ -110,7 +110,7 @@ public OnGameModeInit()
 	TextDrawSetProportional(td_hud_backgroud[1], 0);
 	TextDrawSetShadow(td_hud_backgroud[1], 0);
 
-	td_hud_backgroud[2] = TextDrawCreate(493.3164, -4.2642, !"LD_SPAC:white");
+	td_hud_backgroud[2] = TextDrawCreate(493.1762, -4.3442, !"LD_SPAC:white");
 	TextDrawTextSize(td_hud_backgroud[2], 150.3300, 87.1100);
 	TextDrawAlignment(td_hud_backgroud[2], 1);
 	TextDrawColor(td_hud_backgroud[2], 943208703);
@@ -120,7 +120,7 @@ public OnGameModeInit()
 	TextDrawSetShadow(td_hud_backgroud[2], 0);
 
 	//kills
-	td_hud_kill_squares[0] = TextDrawCreate(499.5567, 7.7610, !"LD_SPAC:white");
+	td_hud_kill_squares[0] = TextDrawCreate(499.5166, 7.7108, !"LD_SPAC:white");
 	TextDrawTextSize(td_hud_kill_squares[0], 54.0000, 67.1900);
 	TextDrawAlignment(td_hud_kill_squares[0], 1);
 	TextDrawColor(td_hud_kill_squares[0], -1);
@@ -129,7 +129,7 @@ public OnGameModeInit()
 	TextDrawSetProportional(td_hud_kill_squares[0], 0);
 	TextDrawSetShadow(td_hud_kill_squares[0], 0);
 
-	td_hud_kill_squares[1] = TextDrawCreate(502.5498, 11.4644, !"LD_SPAC:white");
+	td_hud_kill_squares[1] = TextDrawCreate(502.5296, 11.4442, !"LD_SPAC:white");
 	TextDrawTextSize(td_hud_kill_squares[1], 48.0000, 59.7200);
 	TextDrawAlignment(td_hud_kill_squares[1], 1);
 	TextDrawColor(td_hud_kill_squares[1], 943208703);
@@ -222,7 +222,7 @@ public OnGameModeInit()
 	TextDrawSetProportional(td_hud_ex_blocks[1], 0);
 	TextDrawSetShadow(td_hud_ex_blocks[1], 0);
 
-	td_hud_ex_icons[0] = TextDrawCreate(496.5133, 88.9113, !"XP");
+	td_hud_ex_icons[0] = TextDrawCreate(496.5133, 88.5711, !"XP");
 	TextDrawLetterSize(td_hud_ex_icons[0], 0.2386, 1.0190);
 	TextDrawAlignment(td_hud_ex_icons[0], 1);
 	TextDrawColor(td_hud_ex_icons[0], -5963521);
@@ -231,7 +231,7 @@ public OnGameModeInit()
 	TextDrawSetProportional(td_hud_ex_icons[0], 1);
 	TextDrawSetShadow(td_hud_ex_icons[0], 0);
 
-	td_hud_ex_icons[1] = TextDrawCreate(572.2437, 86.7014, !"$");
+	td_hud_ex_icons[1] = TextDrawCreate(571.8632, 86.8114, !"$");
 	TextDrawLetterSize(td_hud_ex_icons[1], 0.3280, 1.2762);
 	TextDrawAlignment(td_hud_ex_icons[1], 1);
 	TextDrawColor(td_hud_ex_icons[1], 8388863);
@@ -260,7 +260,7 @@ public OnGameModeInit()
 public OnPlayerConnect(playerid)
 {
 	//kills
-	td_hud_player_kills[playerid] = CreatePlayerTextDraw(playerid, 526.7468, 54.8642, !"0");
+	td_hud_player_kills[playerid] = CreatePlayerTextDraw(playerid, 526.7868, 54.8642, !"0");
 	PlayerTextDrawLetterSize(playerid, td_hud_player_kills[playerid], 0.2966, 1.3882);
 	PlayerTextDrawAlignment(playerid, td_hud_player_kills[playerid], 2);
 	PlayerTextDrawColor(playerid, td_hud_player_kills[playerid], -1);
