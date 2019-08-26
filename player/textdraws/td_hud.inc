@@ -73,7 +73,7 @@ static
 	Text:td_hud_backgroud[3],
 	Text:td_hud_kill_squares[2],
 	Text:td_hud_kill_squares_title,
-	Text:td_hud_weapon_name_blocks[2],
+	Text:td_hud_weapon_name_block,
 	Text:td_hud_other_squares[3],
 	Text:td_hud_health_line,
 	Text:td_hud_ex_blocks[2],
@@ -82,6 +82,7 @@ static
 	PlayerText:td_hud_player_kills[MAX_PLAYERS],
 	PlayerText:td_hud_player_kills_life[MAX_PLAYERS],
 	PlayerText:td_hud_player_weapon_model[MAX_PLAYERS] = {PlayerText:-1, ...},
+	PlayerText:td_hud_player_weapon_ammo_block[MAX_PLAYERS],
 	PlayerText:td_hud_player_weapon_name[MAX_PLAYERS],
 	PlayerText:td_hud_player_weapon_ammo[MAX_PLAYERS],
 	PlayerText:td_hud_player_health[MAX_PLAYERS],
@@ -148,23 +149,14 @@ public OnGameModeInit()
 	TextDrawSetShadow(td_hud_kill_squares_title, 0);
 
 	//weapon
-	td_hud_weapon_name_blocks[0] = TextDrawCreate(559.5520, 7.6753, !"LD_SPAC:white");
-	TextDrawTextSize(td_hud_weapon_name_blocks[0], 54.9897, 8.3000);
-	TextDrawAlignment(td_hud_weapon_name_blocks[0], 1);
-	TextDrawColor(td_hud_weapon_name_blocks[0], -1);
-	TextDrawBackgroundColor(td_hud_weapon_name_blocks[0], 255);
-	TextDrawFont(td_hud_weapon_name_blocks[0], 4);
-	TextDrawSetProportional(td_hud_weapon_name_blocks[0], 0);
-	TextDrawSetShadow(td_hud_weapon_name_blocks[0], 0);
-
-	td_hud_weapon_name_blocks[1] = TextDrawCreate(609.8571, 7.6803, !"LD_SPAC:white");
-	TextDrawTextSize(td_hud_weapon_name_blocks[1], 24.0000, 1.2400);
-	TextDrawAlignment(td_hud_weapon_name_blocks[1], 1);
-	TextDrawColor(td_hud_weapon_name_blocks[1], -1);
-	TextDrawBackgroundColor(td_hud_weapon_name_blocks[1], 255);
-	TextDrawFont(td_hud_weapon_name_blocks[1], 4);
-	TextDrawSetProportional(td_hud_weapon_name_blocks[1], 0);
-	TextDrawSetShadow(td_hud_weapon_name_blocks[1], 0);
+	td_hud_weapon_name_block = TextDrawCreate(559.5520, 7.6753, !"LD_SPAC:white");
+	TextDrawTextSize(td_hud_weapon_name_block, 54.9897, 8.3000);
+	TextDrawAlignment(td_hud_weapon_name_block, 1);
+	TextDrawColor(td_hud_weapon_name_block, -1);
+	TextDrawBackgroundColor(td_hud_weapon_name_block, 255);
+	TextDrawFont(td_hud_weapon_name_block, 4);
+	TextDrawSetProportional(td_hud_weapon_name_block, 0);
+	TextDrawSetShadow(td_hud_weapon_name_block, 0);
 
 	td_hud_other_squares[0] = TextDrawCreate(559.5064, 18.0510, !"LD_SPAC:white");
 	TextDrawTextSize(td_hud_other_squares[0], 3.3299, 4.1500);
@@ -279,6 +271,15 @@ public OnPlayerConnect(playerid)
 	PlayerTextDrawSetShadow(playerid, td_hud_player_kills_life[playerid], 0);
 
 	//weapon
+	td_hud_player_weapon_ammo_block[playerid] = CreatePlayerTextDraw(playerid, 609.8571, 7.6803, !"LD_SPAC:white");
+	PlayerTextDrawTextSize(playerid, td_hud_player_weapon_ammo_block[playerid], 24.0000, 1.2400);
+	PlayerTextDrawAlignment(playerid, td_hud_player_weapon_ammo_block[playerid], 1);
+	PlayerTextDrawColor(playerid, td_hud_player_weapon_ammo_block[playerid], -1);
+	PlayerTextDrawBackgroundColor(playerid, td_hud_player_weapon_ammo_block[playerid], 255);
+	PlayerTextDrawFont(playerid, td_hud_player_weapon_ammo_block[playerid], 4);
+	PlayerTextDrawSetProportional(playerid, td_hud_player_weapon_ammo_block[playerid], 0);
+	PlayerTextDrawSetShadow(playerid, td_hud_player_weapon_ammo_block[playerid], 0);
+
 	td_hud_player_weapon_name[playerid] = CreatePlayerTextDraw(playerid, 560.1630, 6.6918, !"LLSD");
 	PlayerTextDrawLetterSize(playerid, td_hud_player_weapon_name[playerid], 0.2460, 1.0482);
 	PlayerTextDrawAlignment(playerid, td_hud_player_weapon_name[playerid], 1);
@@ -335,7 +336,6 @@ public OnPlayerConnect(playerid)
 	PlayerTextDrawSetProportional(playerid, td_hud_player_money[playerid], 1);
 	PlayerTextDrawSetShadow(playerid, td_hud_player_money[playerid], 0);
 
-
 	#if defined td_hud_OnPlayerConnect
 		td_hud_OnPlayerConnect(playerid);
 	#endif
@@ -365,8 +365,7 @@ public OnPlayerSpawn(playerid)
 		TextDrawShowForPlayer(playerid, td_hud_kill_squares[0]);
 		TextDrawShowForPlayer(playerid, td_hud_kill_squares[1]);
 		TextDrawShowForPlayer(playerid, td_hud_kill_squares_title);
-		TextDrawShowForPlayer(playerid, td_hud_weapon_name_blocks[0]);
-		TextDrawShowForPlayer(playerid, td_hud_weapon_name_blocks[1]);
+		TextDrawShowForPlayer(playerid, td_hud_weapon_name_block);
 		TextDrawShowForPlayer(playerid, td_hud_other_squares[0]);
 		TextDrawShowForPlayer(playerid, td_hud_other_squares[1]);
 		TextDrawShowForPlayer(playerid, td_hud_other_squares[2]);
@@ -424,6 +423,8 @@ stock UpdateHudWeapon(playerid, weaponid)
 	format(string, sizeof string, "%02i/%02i", ammo, td_hud_weapon_ammo[weaponid]);
 	PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], string);
 
+	PlayerTextDrawTextSize(playerid, td_hud_player_weapon_ammo_block[playerid], 24.0000, 1.2400);
+	PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo_block[playerid]);
 
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_model[playerid]);
 
@@ -519,6 +520,9 @@ public PlayerHudTimer(playerid)
 		{
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_name[playerid], "Parachute");
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], " ");
+
+			PlayerTextDrawTextSize(playerid, td_hud_player_weapon_ammo_block[playerid], 24.0000, 8.3000);
+			PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo_block[playerid]);
 	
 			PlayerTextDrawDestroy(playerid, td_hud_player_weapon_model[playerid]);
 
@@ -540,6 +544,9 @@ public PlayerHudTimer(playerid)
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_name[playerid], "Fists");
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], " ");
 			PlayerTextDrawHide(playerid, td_hud_player_weapon_model[playerid]);
+
+			PlayerTextDrawTextSize(playerid, td_hud_player_weapon_ammo_block[playerid], 24.0000, 8.3000);
+			PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo_block[playerid]);
 		}
 	}
 
@@ -559,7 +566,6 @@ public PlayerHudTimer(playerid)
 
 	return 1;
 }
-
 
 public OnPlayerDeath(playerid, killerid, reason)
 {
@@ -593,8 +599,7 @@ public OnPlayerDisconnect(playerid, reason)
 	TextDrawHideForPlayer(playerid, td_hud_kill_squares[0]);
 	TextDrawHideForPlayer(playerid, td_hud_kill_squares[1]);
 	TextDrawHideForPlayer(playerid, td_hud_kill_squares_title);
-	TextDrawHideForPlayer(playerid, td_hud_weapon_name_blocks[0]);
-	TextDrawHideForPlayer(playerid, td_hud_weapon_name_blocks[1]);
+	TextDrawHideForPlayer(playerid, td_hud_weapon_name_block);
 	TextDrawHideForPlayer(playerid, td_hud_other_squares[0]);
 	TextDrawHideForPlayer(playerid, td_hud_other_squares[1]);
 	TextDrawHideForPlayer(playerid, td_hud_other_squares[2]);
@@ -607,6 +612,7 @@ public OnPlayerDisconnect(playerid, reason)
 	PlayerTextDrawDestroy(playerid, td_hud_player_kills[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_kills_life[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_model[playerid]);
+	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_ammo_block[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_name[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_ammo[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_health[playerid]);
