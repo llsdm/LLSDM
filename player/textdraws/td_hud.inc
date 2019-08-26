@@ -555,9 +555,9 @@ public PlayerHudTimer(playerid)
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_name[playerid], "Fists");
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], " ");
 			PlayerTextDrawHide(playerid, td_hud_player_weapon_model[playerid]);
-			/*
+			
 			PlayerTextDrawTextSize(playerid, td_hud_player_weapon_ammo_block[playerid], 24.0000, 8.3000);
-			PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo_block[playerid]);*/
+			PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo_block[playerid]);
 		}
 	}
 
