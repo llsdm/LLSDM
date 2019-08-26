@@ -612,8 +612,8 @@ public OnPlayerDisconnect(playerid, reason)
 	PlayerTextDrawDestroy(playerid, td_hud_player_kills[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_kills_life[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_model[playerid]);
-	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_ammo_block[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_name[playerid]);
+	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_ammo_block[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_ammo[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_health[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_health_line[playerid]);
