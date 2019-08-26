@@ -44,6 +44,7 @@ public OnPlayerConnect(playerid)
 {
 	PlayerConnect;
 	TogglePlayerSpectating(playerid, true);
+	
 	return 1;
 }
 
