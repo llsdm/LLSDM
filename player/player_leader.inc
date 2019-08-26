@@ -46,7 +46,7 @@ stock GetKillLeader()
 		}
 	}
 
-	if (leaderid != playerid)
+	if (leaderid != playerid && kills > 0)
 	{
 		leaderid = playerid;
 		format(string, sizeof string, str, pInfo[playerid][pName]);
