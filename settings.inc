@@ -9,7 +9,7 @@
 #define SETTING_HOSTNAME				!"hostname LLSDM"
 #define SETTING_MODE					!"gamemodetext LLSDM"
 #define SETTING_LANGUAGE				!"language Russia"
-#define SETTING_VERSION					"LLSDM v0.2 Beta"
+#define SETTING_VERSION					"LLSDM v0.3 Beta"
 #define SETTING_TIME				        19
 #define SETTING_WEATHER					07
 #define SETTING_SHOW_NAME_TAGS	                        1
