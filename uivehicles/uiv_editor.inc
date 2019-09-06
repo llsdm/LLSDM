@@ -52,6 +52,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 		vehicleid = CreateUIVehicle(modelid, x, y, z, a);
 
+		if (modelid == COLLECTOR)
+			MAX_COLLECTOR_VEHICLES++;
+
+
 		PutPlayerInVehicle(playerid, vehicleid, 0);
 
 		format(string, sizeof string, str, 
@@ -151,14 +155,13 @@ CMD:delveh(playerid)
 
 	foreach(Player, i)
 	{
-		modelid = GetVehicleModel(vehicleid);
-
 		if (uiv_vehicleid[i] == vehicleid)
 		{
 			if (modelid == COLLECTOR)
 			{
 				DeathPlayerWithBagMoney(i);
 				RestoreCollectorVehicleTimer(i, vehicleid);
+				ClearPlayerIDFromArrayCollector(i);
 			}
 
 			TrunkOrRearDoorsOfVehicle(i);
@@ -179,6 +182,8 @@ CMD:delveh(playerid)
 
 			uiv[vehicleid][uiv_hack] =
 			uiv[vehicleid][uiv_death] = false;
+
+			MAX_COLLECTOR_VEHICLES--;
 		}
 		case TRUCK:
 		{

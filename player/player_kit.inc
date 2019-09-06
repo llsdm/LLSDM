@@ -13,7 +13,8 @@ static enum
 
 static enum Float:
 {
-	Float:KIT_HEALTH = 30.0
+	Float:KIT_HEALTH = 50.0,
+	Float:KIT_QUICK_HEALTH = 10.0
 };
 
 static
@@ -74,21 +75,26 @@ public KitTimer(playerid)
 		#endif
 
 		GetPlayerHealth(playerid, health);
-		SetPlayerHealth(playerid, health + KIT_HEALTH);
-
-		if (health + KIT_HEALTH > 100.0)
-		{
-			if (health + KIT_HEALTH > 110.0)
-			{
-				SetPlayerDrunkLevel(playerid, 3000);
-				SendClientMessage(playerid, COLOR_ERROR, !"Передозировка");
-			}
-			SetPlayerHealth(playerid, 100.0);
-		}
+		health += KIT_HEALTH;
+		OverdoseOfFirstAidKit(playerid, health, KIT_HEALTH);
 	}
 
 	kit_timer[playerid] = 0;
 	AttachKitToPlayer(playerid);
+
+	return 1;
+}
+
+static stock OverdoseOfFirstAidKit(playerid, Float:health, Float:limit)
+{
+	if (health + limit > 100.0)
+	{
+		SetPlayerDrunkLevel(playerid, 3000);
+		SendClientMessage(playerid, COLOR_ERROR, !"Передозировка");
+		SetPlayerHealth(playerid, 100.0);
+	}
+	else
+		SetPlayerHealth(playerid, health);
 
 	return 1;
 }

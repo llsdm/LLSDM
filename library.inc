@@ -13,11 +13,14 @@
 //global
 	//maps-remove
 	#include "../LLSDM/global/maps/remove_billboards.inc"
+#include "../LLSDM/global/maps/lost_venturas.inc"
 #include "../LLSDM/global/billboards.inc"
+#include "../LLSDM/global/containers.inc"
 
 //player
 	//textdraws
 	#include "../LLSDM/player/textdraws/td_gamemode_version.inc"
+	#include "../LLSDM/player/textdraws/td_map.inc"
 	#include "../LLSDM/player/textdraws/td_hud.inc"
 	//database
 	#include "../LLSDM/player/database/db_dialogs.inc"
@@ -39,6 +42,7 @@
 
 //admin
 	//CMD
+	#include "../LLSDM/admin/CMD/cmd_ahelp.inc"
 	#include "../LLSDM/admin/CMD/cmd_disconnect.inc"
 	#include "../LLSDM/admin/CMD/cmd_go.inc"
 	#include "../LLSDM/admin/CMD/cmd_say.inc"

@@ -45,6 +45,13 @@ public UploadVehicles()
 			cache_get_value_name_float(i, "angle", a);
 			vehicleid = CreateUIVehicle(modelid, x, y, z, a);
 			cache_get_value_name_int(i, "index", uiv[vehicleid][uiv_index]);
+
+			if (modelid == COLLECTOR)
+			{
+				MAX_COLLECTOR_VEHICLES++;
+			}
 		}
 	}
+
+	return 1;
 }

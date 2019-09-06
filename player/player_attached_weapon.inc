@@ -80,7 +80,7 @@ public OnPlayerUpdate(playerid)
 		{
 			if (weaponid_now != weaponid_t3)
 			{
-				if (pInfo[playerid][pBag] != 0)
+				if (pInfo[playerid][pBag])
 				{
 					SetPlayerAttachedObject(playerid, AMMU_SLOT_WEAPON_3, GetWeaponModel(weaponid_t3), 1, 0.253000, -0.206999, 0.023000, 178.699569, -166.400131, 21.000001, 0.894000, 1.000000, 0.870999);
 				}
@@ -133,7 +133,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_WEAPON_2);
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_WEAPON_3);
 
-	#if  defined player_at_weap_OnPlayerDeath
+	#if defined player_at_weap_OnPlayerDeath
 		player_at_weap_OnPlayerDeath(playerid, killerid, reason);
 	#endif
 
@@ -157,7 +157,7 @@ public OnPlayerDisconnect(playerid, reason)
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_WEAPON_2);
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_WEAPON_3);
 
-	#if  defined player_at_weap_OnPlayerDis
+	#if defined player_at_weap_OnPlayerDis
 		player_at_weap_OnPlayerDis(playerid, reason);
 	#endif
 

@@ -31,17 +31,20 @@ stock RemovePlayerInfo(playerid)
 	pInfo[playerid][pAmmo][0] =
 	pInfo[playerid][pAmmo][1] =
 
-	pInfo[playerid][pBag] =
 	pInfo[playerid][pBackpackLvl] =
 	pInfo[playerid][pBackpackSize] = 0;
 
 	pInfo[playerid][pHealth] = 0.0;
+
+	pInfo[playerid][pBag] = false;
 
 	for (new i = 0; i < MAX_BACKPACK_SLOTS; i++)
 	{
 		backpack_index[playerid][i] =
 		backpack_number[playerid][i] = 0;
 	}
+
+	player_authorized{playerid} = false;
 
 	return 1;
 }

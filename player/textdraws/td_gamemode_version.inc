@@ -22,6 +22,8 @@ public OnGameModeInit()
 	TextDrawSetProportional(td_gm_version, 1);
 	TextDrawSetShadow(td_gm_version, 0);
 
+	printf("%i\n", _:td_gm_version);
+
 	#if defined td_gm_version_OnGameModeInit
 		td_gm_version_OnGameModeInit();
 	#endif
@@ -35,7 +37,7 @@ public OnGameModeInit()
 	#define _ALS_OnGameModeInit
 #endif
 #define OnGameModeInit td_gm_version_OnGameModeInit
-#if  defined td_gm_version_OnGameModeInit
+#if defined td_gm_version_OnGameModeInit
 	forward td_gm_version_OnGameModeInit();
 #endif
 

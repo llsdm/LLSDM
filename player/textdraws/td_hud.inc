@@ -10,7 +10,7 @@ static enum Float:
 
 static enum
 {
-	TD_HUD_TIMER_TIME = 500
+	TD_HUD_TIMER_TIME = 1000
 };
 
 static enum
@@ -245,7 +245,7 @@ public OnGameModeInit()
 	#define _ALS_OnGameModeInit
 #endif
 #define OnGameModeInit td_hud_OnGameModeInit
-#if  defined td_hud_OnGameModeInit
+#if defined td_hud_OnGameModeInit
 	forward td_hud_OnGameModeInit();
 #endif
 
@@ -431,6 +431,7 @@ stock UpdateHudWeapon(playerid, weaponid)
 	PlayerTextDrawSetString(playerid, td_hud_player_weapon_name[playerid], td_hud_weapon_name[weaponid]);
 
 	GetPlayerWeaponData(playerid, slot, weapon, ammo);
+	printf("%i, %i, %i\n", weaponid, weapon, ammo);
 	format(string, sizeof string, "%02i/%02i", ammo, td_hud_weapon_ammo[weaponid]);
 	PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], string);
 
@@ -555,7 +556,7 @@ public PlayerHudTimer(playerid)
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_name[playerid], "Fists");
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], " ");
 			PlayerTextDrawHide(playerid, td_hud_player_weapon_model[playerid]);
-			
+
 			PlayerTextDrawTextSize(playerid, td_hud_player_weapon_ammo_block[playerid], 24.0000, 8.3000);
 			PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo_block[playerid]);
 		}

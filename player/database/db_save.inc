@@ -5,6 +5,9 @@
 
 stock SaveLife(playerid)
 {
+	if (!IsPlayerAuthorized(playerid))
+		return 0;
+
 	static const
 		str[] = "UPDATE `accounts` SET `pLife` = '%i' WHERE `pID` = '%i'";
 
@@ -37,6 +40,9 @@ stock SaveLife(playerid)
 
 stock SaveExp(playerid)
 {
+	if (!IsPlayerAuthorized(playerid))
+		return 0;
+
 	static const
 		str[] = "UPDATE `accounts` SET `pExpLife` = '%i', `pExp` = '%i', `pMoney` = '%i' WHERE `pID` = '%i'";
 
@@ -56,14 +62,22 @@ stock SaveExp(playerid)
 
 stock SaveHealth(playerid)
 {
+	if (!IsPlayerAuthorized(playerid))
+		return 0;
+
+	new
+		Float:health;
+	
 	static const
 		str[] = "UPDATE `accounts` SET `pHealth` = '%.0f' WHERE `pID` = '%i'";
 
 	static
 		string[sizeof str + 5*11 - 5*2];
  
+ 	GetPlayerHealth(playerid, health);
+ 
 	format(string, sizeof string, str,
-		pInfo[playerid][pHealth],
+		health,
 		pInfo[playerid][pID]
 	);
 	mysql_tquery(mysql_connect_ID, string, "", "");
@@ -73,6 +87,9 @@ stock SaveHealth(playerid)
 
 stock SaveDeath(playerid)
 {
+	if (!IsPlayerAuthorized(playerid))
+		return 0;
+	
 	static const
 		str[] = "UPDATE `accounts` SET `pKillsLife` = '%i', `pKills` = '%i', `pTimeKill` = '%i', `pDeaths` = '%i' WHERE `pID` = '%i'";
 
@@ -93,6 +110,9 @@ stock SaveDeath(playerid)
 
 stock SaveWeapon(playerid)
 {
+	if (!IsPlayerAuthorized(playerid))
+		return 0;
+	
 	static const
 		str[] = "UPDATE `accounts` SET `pWeapons` = '%i|%i|%i', `pSecondWeapon` = '%i', `pAmmo` = '%i|%i' WHERE `pID` = '%i'";
 
@@ -115,6 +135,9 @@ stock SaveWeapon(playerid)
 
 stock SaveBackpackLvl(playerid)
 {
+	if (!IsPlayerAuthorized(playerid))
+		return 0;
+	
 	static const
 		str[] = "UPDATE `accounts` SET `pBackpackLvl` = '%i', `pBackpackSize` = '%i' WHERE `pID` = '%i'";
 
@@ -133,6 +156,9 @@ stock SaveBackpackLvl(playerid)
 
 stock SaveBackpack(playerid)
 {
+	if (!IsPlayerAuthorized(playerid))
+		return 0;
+	
 	static const
 		str[] = "UPDATE `accounts` SET `pBackpackIndex` = '%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i', `pBackpackNumber` = '%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i' WHERE `pID` = '%i'";
 
@@ -187,6 +213,9 @@ stock SaveBackpack(playerid)
 
 stock SavePosition(playerid)
 {
+	if (!IsPlayerAuthorized(playerid))
+		return 0;
+	
 	static const
 		str[] = "UPDATE `accounts` SET `pPosition` = '%.02f|%.02f|%.02f|%.02f' WHERE `pID` = '%i'";
 

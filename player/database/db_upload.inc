@@ -48,12 +48,12 @@ public UploadPlayerAccount(playerid)
 		cache_get_value_name(0, "pPosition", buff);
 		sscanf(buff, !"p<|>ffff", pos_x, pos_y, pos_z, angle);
 
-		GetKillLeader();
-
-		SetSpawnInfo(playerid, 0, pInfo[playerid][pSkin], pos_x, pos_y, pos_z, angle, pInfo[playerid][pWeapons][0], pInfo[playerid][pAmmo][0], pInfo[playerid][pWeapons][1], pInfo[playerid][pAmmo][1], 0, 0);
+		SetSpawnInfo(playerid, 0, pInfo[playerid][pSkin], pos_x, pos_y, pos_z, angle, 0, 0, 0, 0, 0, 0);
 	}
 	else
 		CreateSpawnInfo(playerid);
+
+	GetKillLeader();
 	
 	SendClientMessage(playerid, COLOR_LIME, !"Вы успешно авторизировались!");
 

@@ -34,17 +34,17 @@ static enum Float:
 }
 
 static enum
-	billboard_info
+	billboard_create_info
 	{
-		billboard_info_id,
-		Float:billboard_info_x,
-		Float:billboard_info_y,
-		Float:billboard_info_z,
-		Float:billboard_info_a
+		billboard_create_id,
+		Float:billboard_create_x,
+		Float:billboard_create_y,
+		Float:billboard_create_z,
+		Float:billboard_create_a
 	};
 
 static enum
-	b_info
+	billboard_database_info
 	{
 		bIndex,
 		bObject,
@@ -58,7 +58,7 @@ static enum
 	};
 
 static const
-	billboard_objects[BILLBOARD_OBJECTS][billboard_info] =
+	billboard_objects[BILLBOARD_OBJECTS][billboard_create_info] =
 	{
 		{19480, 0.0400, 0.0000, 0.0000},
 		{19480, 0.0600, 0.0000, -0.3500},
@@ -69,7 +69,7 @@ static const
 		{19477, 0.1000, 0.0000, 2.2900},
 		{19477, 0.0600, 0.0000, 1.5500}
 	},
-	billboard_objects_logo[BILLBOARD_OBJECTS_LOGO-1][billboard_info] =
+	billboard_objects_logo[BILLBOARD_OBJECTS_LOGO-1][billboard_create_info] =
 	{
 		{19483, 0.0400, 0.0000, 1.7700},
 		{19479, 0.0400, 0.0000, 0.0000}
@@ -101,7 +101,7 @@ static const
 	};
 
 static
-	BillboardInfo[MAX_BILLBOARDS][b_info],
+	BillboardInfo[MAX_BILLBOARDS][billboard_database_info],
 	BILLBOARDS_NUMS_LEADER,
 	BILLBOARDS_NUMS_LOGO;
 
@@ -137,8 +137,8 @@ stock UpdateBillboard(playerid, kills)
 
 public OnGameModeInit()
 {
-	mysql_tquery(mysql_connect_ID, "SELECT * FROM `billboards` WHERE `status` != '0' AND `group` != '3'", "CreatBillboards", "");
-	mysql_tquery(mysql_connect_ID, "SELECT * FROM `billboards` WHERE `status` != '0' AND `group` = '3'", "CreatBillboardsLogo", "");
+	mysql_tquery(mysql_connect_ID, "SELECT * FROM `billboards` WHERE `status` != '0' AND `group` != '3'", "UploadLeaderboards", "");
+	mysql_tquery(mysql_connect_ID, "SELECT * FROM `billboards` WHERE `status` != '0' AND `group` = '3'", "UploadLogoboards", "");
 
 	#if defined billboards_OnGameModeInit
 		billboards_OnGameModeInit();
@@ -153,12 +153,12 @@ public OnGameModeInit()
 	#define _ALS_OnGameModeInit
 #endif
 #define OnGameModeInit billboards_OnGameModeInit
-#if  defined billboards_OnGameModeInit
+#if defined billboards_OnGameModeInit
 	forward billboards_OnGameModeInit();
 #endif
 
-forward CreatBillboards();
-public CreatBillboards()
+forward UploadLeaderboards();
+public UploadLeaderboards()
 {
 	new
 		rows,
@@ -188,8 +188,8 @@ public CreatBillboards()
 	return 1;
 }
 
-forward CreatBillboardsLogo();
-public CreatBillboardsLogo()
+forward UploadLogoboards();
+public UploadLogoboards()
 {
 	new
 		rows,
@@ -214,17 +214,6 @@ public CreatBillboardsLogo()
 	return 1;
 }
 
-static stock BillboardVector(&Float:x, &Float:y, Float:angle)
-{
-	new 
-		Float:cx = x,
-		Float:cy = y; 
-
-	x = cx*floatcos(angle, degrees)-cy*floatsin(angle, degrees); 
-	y = cx*floatsin(angle, degrees)+cy*floatcos(angle, degrees); 
-	return 1;
-}
-
 static stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, Float:x_2, Float:y_2, Float:a)
 {
 	new
@@ -241,7 +230,7 @@ static stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, 
 		z_1 = 5.8;
 		difference_y = 0.0;
 
-		BillboardVector(x_1, y_1, a);
+		GetVector(x_1, y_1, a);
 
 		x += x_1;
 		y += y_1;
@@ -259,7 +248,7 @@ static stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, 
 		z_1 = 6.456867;
 		difference_y = BILLBOARD_GROUP_1_DIFFERENCE_Y*3;
 		
-		BillboardVector(x_1, y_1, a);
+		GetVector(x_1, y_1, a);
 
 		x += x_1;
 		y += y_1;
@@ -271,19 +260,19 @@ static stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, 
 		x_1 = 0.85;
 		y_1 = BILLBOARD_GROUP_1_DIFFERENCE_Y*4;
 
-		BillboardVector(x_1, y_1, a);
+		GetVector(x_1, y_1, a);
 
 		BillboardInfo[billboardid][bLeader][1] = CreateDynamicObject(19479, x_2+x_1, y_2+y_1, z, 0.0, 0.0, a);
 	}
 
 	for (new j = 0; j < BILLBOARD_OBJECTS; j++)
 	{
-		info_id = billboard_objects[j][billboard_info_id],
-		x_1 = billboard_objects[j][billboard_info_x];
+		info_id = billboard_objects[j][billboard_create_id],
+		x_1 = billboard_objects[j][billboard_create_x];
 		y_1 = difference_y/2;
-		z_1 = billboard_objects[j][billboard_info_z];
+		z_1 = billboard_objects[j][billboard_create_z];
 
-		BillboardVector(x_1, y_1, a);
+		GetVector(x_1, y_1, a);
 
 		BillboardInfo[billboardid][bLeader][j+BILLBOARD_SPECIAL_OBJECTS] = CreateDynamicObject(info_id, x+x_1, y+y_1, z+z_1, 0.0, 0.0, a);
 
@@ -313,7 +302,7 @@ static stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, 
 				break;
 		} 
 
-		BillboardVector(x_1, y_1, a_1);
+		GetVector(x_1, y_1, a_1);
 
 		BillboardInfo[billboardid][bLeader][b+m] = CreateDynamicObject(BILLBOARD_BLOCK, x_2+x_1, y_2+y_1, z_2-z_1-1.55, 0.0, 0.0, a_1-90.0, -1, -1, -1, 300.0, 300.0);
 	}
@@ -361,7 +350,7 @@ static stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 			z_1 = 5.4;
 			a_1 = 172.619995;
 
-			BillboardVector(x_1, y_1, a);
+			GetVector(x_1, y_1, a);
 
 			x_2 = x+x_1;
 			y_2 = y+y_1;
@@ -377,7 +366,7 @@ static stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 			z_1 = 5.4;
 			a_1 = 7.550000;
 
-			BillboardVector(x_1, y_1, a);
+			GetVector(x_1, y_1, a);
 					
 			x_2 = x+x_1;
 			y_2 = y+y_1;
@@ -389,13 +378,13 @@ static stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 
 		for (new k = 0; k < 2; k++)
 		{
-			info_id = billboard_objects_logo[k][billboard_info_id],
-			x_1 = billboard_objects_logo[k][billboard_info_x];
+			info_id = billboard_objects_logo[k][billboard_create_id],
+			x_1 = billboard_objects_logo[k][billboard_create_x];
 			y_1 = 0.0;
-			z_1 = billboard_objects_logo[k][billboard_info_z];
+			z_1 = billboard_objects_logo[k][billboard_create_z];
 			a_3 = a_2-180.0;
 
-			BillboardVector(x_1, y_1, a_3);
+			GetVector(x_1, y_1, a_3);
 
 			BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][k]  = CreateDynamicObject(info_id, x_2+x_1, y_2+y_1, z_2+z_1, 0.0, 0.0, a_3);
 		}
@@ -407,7 +396,7 @@ static stock CreateLogoboard(Float:x, Float:y, Float:z, Float:a, Float:a_3)
 			z_1 = billboard_block_objects_t3[b][1];
 			a_1 = a_2;
 
-			BillboardVector(x_1, y_1, a_1);
+			GetVector(x_1, y_1, a_1);
 
 			BillboardInfo[BILLBOARDS_NUMS_LOGO][bLogo][b+m] = CreateDynamicObject(BILLBOARD_BLOCK, x_2+x_1, y_2+y_1, z_2-z_1, 0.0, 0.0, a_1-90.0, -1, -1, -1, 300.0, 300.0);
 		}	

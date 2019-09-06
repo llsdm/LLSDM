@@ -25,6 +25,56 @@ public NewKick(playerid)
 #define InvisiblePlayerIcon(%0) \
 	(SetPlayerColor(%0, COLOR_WHITE_A))
 
+stock GetVector(&Float:x, &Float:y, Float:angle)
+{
+	new
+		Float:cx = x,
+		Float:cy = y;
+
+	x = cx*floatcos(angle, degrees)-cy*floatsin(angle, degrees);
+	y = cx*floatsin(angle, degrees)+cy*floatcos(angle, degrees);
+
+	return 1;
+}
+
+stock AddDelimiterToInt(value, const space[] = "-")
+{
+	new
+		string[16],
+		i,
+		k,
+		v = 3,
+		s;
+
+	format(string, sizeof string, "%i", value >= 0 ? value : -value);
+
+	k = strlen(string);
+	i = k/3;
+	k %= 3;
+
+	if (i != 0)
+	{
+		if (k != 0)
+		{
+			strins(string, space, k);
+			k++;
+		}
+
+		while (--i > 0)
+		{
+			k += v;
+			strins(string, space, k);
+			v++;
+		}
+	}
+
+	if (value < 0)
+		strins(string, "-", 0);
+
+	return string;
+}
+
+
 stock ShowPlayerReminder(playerid, const reminder[], dialogid = 0)
 {
 	new

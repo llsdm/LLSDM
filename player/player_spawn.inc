@@ -34,15 +34,20 @@ static
 
 public OnPlayerSpawn(playerid)
 {
-	static
+	new
 		obj0, obj1, obj2, obj3,
 		Float:x, Float:y, Float:z, Float:a,
 		Float:f_x, Float:f_y;
 
 	InvisiblePlayerIcon(playerid);
 
+	player_authorized{playerid} = true;
+
 	if (pInfo[playerid][pLife] != 0)
 	{
+		GivePlayerWeapon(playerid, pInfo[playerid][pWeapons][0], pInfo[playerid][pAmmo][0]);
+		GivePlayerWeapon(playerid, pInfo[playerid][pWeapons][1], pInfo[playerid][pAmmo][1]);
+		SetPlayerArmedWeapon(playerid, 0);
 		SetPlayerSkin(playerid, pInfo[playerid][pSkin]);
 		SetPlayerHealth(playerid, pInfo[playerid][pHealth]);
 		

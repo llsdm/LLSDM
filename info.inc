@@ -27,7 +27,7 @@ enum
 		pWeapons[MAX_WEAPONS+1],
 		pSecondWeapon,
 		pAmmo[MAX_WEAPONS],
-		pBag,
+		bool:pBag,
 		pBackpackLvl,
 		pBackpackSize,
 	};
@@ -35,15 +35,21 @@ enum
 enum 
 	server_info
 	{
-		sOnline
+		sOnline,
+		sPlayersWithBag
 	};
 	
-
 new
+	MAX_COLLECTOR_VEHICLES,
+
+	bool:player_authorized[MAX_PLAYERS char],
 	pInfo[MAX_PLAYERS][player_info],
 	sInfo[server_info],
+
 	backpack_index[MAX_PLAYERS][MAX_BACKPACK_SLOTS],
 	backpack_number[MAX_PLAYERS][MAX_BACKPACK_SLOTS];
 
-#define PlayerConnect			sInfo[sOnline]++
-#define PlayerDisconnect		sInfo[sOnline]--
+#define PlayerConnect				sInfo[sOnline]++
+#define PlayerDisconnect			sInfo[sOnline]--
+
+#define IsPlayerAuthorized(%0)		player_authorized{%0}

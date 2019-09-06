@@ -62,12 +62,13 @@ new
 	uiv_vehicleid[MAX_PLAYERS],
 	uiv[MAX_VEHICLES][uiv_info];
 
+#include "../LLSDM/uivehicles/uiv_upload.inc"
+
 #include "../LLSDM/uivehicles/uiv_collector.inc"
 #include "../LLSDM/uivehicles/uiv_ambulance.inc"
 #include "../LLSDM/uivehicles/uiv_police.inc"
 #include "../LLSDM/uivehicles/uiv_truck.inc"
 
-#include "../LLSDM/uivehicles/uiv_upload.inc"
 #include "../LLSDM/uivehicles/uiv_editor.inc"
 
 
@@ -88,7 +89,7 @@ public OnGameModeInit()
 	#define _ALS_OnGameModeInit
 #endif
 #define OnGameModeInit uiv_OnGameModeInit
-#if  defined uiv_OnGameModeInit
+#if defined uiv_OnGameModeInit
 	forward uiv_OnGameModeInit();
 #endif
 

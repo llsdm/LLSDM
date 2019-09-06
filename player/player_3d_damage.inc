@@ -93,7 +93,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 	#define _ALS_OnPlayerTakeDamage
 #endif
 #define OnPlayerTakeDamage player_3d_damage_OnPlayerTDam
-#if  defined player_3d_damage_OnPlayerTDam
+#if defined player_3d_damage_OnPlayerTDam
 	forward player_3d_damage_OnPlayerTDam(playerid, issuerid, Float:amount, weaponid, bodypart);
 #endif
 
@@ -121,6 +121,6 @@ public OnDynamicObjectMoved(objectid)
 	#define _ALS_OnDynamicObjectMoved
 #endif
 #define OnDynamicObjectMoved player_3d_damage_OnDynObjMoved
-#if  defined player_3d_damage_OnDynObjMoved
+#if defined player_3d_damage_OnDynObjMoved
 	forward player_3d_damage_OnDynObjMoved(objectid);
 #endif

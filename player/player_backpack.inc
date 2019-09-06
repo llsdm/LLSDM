@@ -338,9 +338,14 @@ static stock OpenBackpack(playerid)
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
 	if (HOLDING(KEY_YES))
-		return OpenBackpack(playerid);
+	{
+		if (IsPlayerAuthorized(playerid))
+		{
+			return OpenBackpack(playerid);
+		}
+	}
 
-	#if  defined player_backpack_OnPlayerNewKey
+	#if defined player_backpack_OnPlayerNewKey
 		player_backpack_OnPlayerNewKey(playerid, newkeys, oldkeys);
 	#endif
 
