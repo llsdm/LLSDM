@@ -291,6 +291,7 @@ public UpdateMapMarkets(playerid)
 		targetid = GetPlayerIDInArrayCollector(i);
 
 		PlayerTextDrawDestroy(playerid, td_map_markets[playerid][i]);
+		td_map_markets[playerid][i] = CreatePlayerTextDraw(playerid, td_x, td_y, !"hud:radar_light");
 
 		if (targetid == -1)
 			continue;
@@ -303,7 +304,6 @@ public UpdateMapMarkets(playerid)
 		td_x = (TD_MAP_POS_X + TD_MAP_SIZE_X * (x + 3000.0) / 6000.0)+TD_MAP_POS_ERROR_X; 
 		td_y = (TD_MAP_POS_Y + TD_MAP_SIZE_Y * (3100.0 - y) / 6000.0)+TD_MAP_POS_ERROR_Y;
 
-		td_map_markets[playerid][i] = CreatePlayerTextDraw(playerid, td_x, td_y, !"hud:radar_light");
 		PlayerTextDrawTextSize(playerid, td_map_markets[playerid][i], -4.0000, 5.0000);
 		PlayerTextDrawAlignment(playerid, td_map_markets[playerid][i], 1);
 		PlayerTextDrawColor(playerid, td_map_markets[playerid][i], -1);
