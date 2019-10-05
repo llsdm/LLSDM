@@ -25,6 +25,7 @@ enum
 		pKillsLife,
 		pDeaths,
 		pWeapons[MAX_WEAPONS+1],
+		pWeaponExp[MAX_WEAPONS+1],
 		pSecondWeapon,
 		pAmmo[MAX_WEAPONS],
 		bool:pBag,
