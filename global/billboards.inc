@@ -299,7 +299,9 @@ static stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, 
 			z_1 = billboard_block_objects_t2[b][1];
 
 			if (_:z_1 == 0)
+			{
 				break;
+			}
 		} 
 
 		GetVector(x_1, y_1, a_1);
@@ -309,7 +311,9 @@ static stock CreateLeaderboard(billboardid, modelid, Float:x, Float:y, Float:z, 
 
 	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][0], 0, !" ", 120, !"Arial", 35, 0, BILLBOARD_BACKGROUND, BILLBOARD_BACKGROUND, 1);
 	if (modelid == BILLBOARD_GROUP_2)
+	{
 		SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][1], 0, !" ", 120, !"Arial", 35, 0, BILLBOARD_BACKGROUND, BILLBOARD_BACKGROUND, 1);
+	}
 	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][2], 0, !"ИМЯ ИГРОКА", 120, !"Arial", 35, 0, BILLBOARD_COLOR, 0, 1);
 	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][3], 0, !"_____________", 130, !"Arial", 60, 0, BILLBOARD_COLOR, 0, 1);
 	SetDynamicObjectMaterialText(BillboardInfo[billboardid][bLeader][4], 0, !"УБИЙСТВ:", 130, !"Arial", 100, 1, BILLBOARD_COLOR, 0, 1);

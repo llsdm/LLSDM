@@ -10,14 +10,15 @@
 
 static enum
 {
+	UIV_COL_GIVE_PLAYER_EXP = 1,
+	UIV_COL_GIVE_PLAYER_MONEY = 5,
 	UIV_COL_TIME_TO_HACH = 3,
-	UIV_COL_TIME_TO_RESPAWN_BAG = 15000,
-	UIV_COL_TIME_TO_TIMER = 5000,
-	UIV_COL_BAG_LIMIT = 20,
+	UIV_COL_TIMER_SPEED_RESPAWN_BAG = 15000,
+	UIV_COL_PLAYER_TIMER_SPEED = 5000,
 	
 	#if defined PLAYER_AFK_CHECKER
 		UIV_COL_TIME_SEC_IN_AFK = 20,
-		UIV_COL_TIME_IN_AFK = UIV_COL_TIME_SEC_IN_AFK/(UIV_COL_TIME_TO_TIMER/1000),
+		UIV_COL_TIME_IN_AFK = UIV_COL_TIME_SEC_IN_AFK/(UIV_COL_PLAYER_TIMER_SPEED/1000),
 	#endif
 	
 	UIV_COL_AUTO_SAVE = LLSDM_PARAMS_ON
@@ -26,7 +27,7 @@ static enum
 static
 	collector_vehicleid[MAX_PLAYERS],
 	collector_timer_money[MAX_PLAYERS],
-	collector_playerid[UIV_COL_BAG_LIMIT] = {-1, ...};
+	collector_playerid[LLSDM_MAX_PLAYERS_WITH_BAG] = {-1, ...};
 	
 #if defined PLAYER_AFK_CHECKER
 	static
@@ -36,9 +37,14 @@ static
 stock OpenCollectorVehicle(playerid, vehicleid)
 {
 	if (uiv[vehicleid][uiv_timer] > 0)
+	{
 		return 0;
+	}
+
 	if (uiv[vehicleid][uiv_hack])
+	{
 		return TakePlayerBagWithMoney(playerid, vehicleid);
+	}
 	else
 	{
 		uiv[vehicleid][uiv_time] = UIV_COL_TIME_TO_HACH;
@@ -62,12 +68,16 @@ public CollectorVehicleTimer(playerid, vehicleid)
 	if (uiv[vehicleid][uiv_time] > 0)
 	{
 		if (pInfo[playerid][pDeaths] != deaths)
+		{
 			uiv[vehicleid][uiv_death] = true;
+		}
 
 		deaths = pInfo[playerid][pDeaths];
 			
 		if (uiv[vehicleid][uiv_death])
+		{
 			return 1;
+		}
 
 		if (!IsPlayerInRangeOfPoint(playerid, 20.0, x, y, z))
 		{
@@ -94,7 +104,9 @@ public CollectorVehicleTimer(playerid, vehicleid)
 static stock TakePlayerBagWithMoney(playerid, vehicleid)
 {
 	if (pInfo[playerid][pBag])
+	{
 		return 0;
+	}
 
 	new 
 		str[18] = !"Игрок {E3E35D}";
@@ -105,7 +117,7 @@ static stock TakePlayerBagWithMoney(playerid, vehicleid)
 	YellowPlayerIcon(playerid);
 	AddPlayerIDInArrayCollector(playerid);
 
-	collector_timer_money[playerid] = SetTimerEx(!"BigMoneyRewardTimer", UIV_COL_TIME_TO_TIMER, true, "i", playerid);
+	collector_timer_money[playerid] = SetTimerEx(!"BigMoneyRewardTimer", UIV_COL_PLAYER_TIMER_SPEED, true, "i", playerid);
 	pInfo[playerid][pBag] = true;
 	sInfo[sPlayersWithBag]++;
 
@@ -163,10 +175,22 @@ public BigMoneyRewardTimer(playerid)
 		}
 	#endif
 
-	pInfo[playerid][pExpLife]++;
-	pInfo[playerid][pExp]++;
-	pInfo[playerid][pMoney] += 5;
-	pInfo[playerid][pBagMoney] += 5;
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		pInfo[playerid][pExpLife] += UIV_COL_GIVE_PLAYER_EXP;
+	#endif
+	pInfo[playerid][pExp] += UIV_COL_GIVE_PLAYER_EXP;
+	pInfo[playerid][pMoney] += UIV_COL_GIVE_PLAYER_MONEY;
+	pInfo[playerid][pBagMoney] += UIV_COL_GIVE_PLAYER_MONEY;
+	#if LLSDM_RESPAWN_WITH_SAVED == 1
+		if (pInfo[playerid][pExp] > LLSDM_MAX_VALUER_MONEY_EXP)
+		{
+			pInfo[playerid][pExp] = LLSDM_MAX_VALUER_MONEY_EXP;
+		}
+		if (pInfo[playerid][pMoney] > LLSDM_MAX_VALUER_MONEY_EXP)
+		{
+			pInfo[playerid][pMoney] = LLSDM_MAX_VALUER_MONEY_EXP;
+		}
+	#endif
 
 	#if defined PLAYER_AFK_CHECKER
 		collector_afk_checker{playerid} = 0;
@@ -178,7 +202,9 @@ public BigMoneyRewardTimer(playerid)
 
 	#if UIV_COL_AUTO_SAVE == LLSDM_PARAMS_ON
 		if (pInfo[playerid][pBagMoney] % 100 == 0)
+		{
 			SaveExp(playerid);
+		}
 	#endif
 	
 	return 1;
@@ -187,7 +213,9 @@ public BigMoneyRewardTimer(playerid)
 stock DeathPlayerWithBagMoney(playerid)
 {
 	if (!pInfo[playerid][pBag])
+	{
 		return 0;
+	}
 	
 	static
 		vehicleid,
@@ -196,7 +224,7 @@ stock DeathPlayerWithBagMoney(playerid)
 	GetPlayerPos(playerid, x, y, z);
 	vehicleid = collector_vehicleid[playerid];
 	uiv[vehicleid][uiv_pickup] = CreatePickup(1550, 3, x, y, z, -1);
-	uiv[vehicleid][uiv_timer] = SetTimerEx(!"RestoreCollectorVehicleTimer", UIV_COL_TIME_TO_RESPAWN_BAG, false, "ii", playerid, vehicleid);
+	uiv[vehicleid][uiv_timer] = SetTimerEx(!"RestoreCollectorVehicleTimer", UIV_COL_TIMER_SPEED_RESPAWN_BAG, false, "ii", playerid, vehicleid);
 	KillTimer(collector_timer_money[playerid]);
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_MONEY_BAG);
 	ClearPlayerIDFromArrayCollector(playerid);
@@ -205,7 +233,6 @@ stock DeathPlayerWithBagMoney(playerid)
 	pInfo[playerid][pBag] = false;
 	sInfo[sPlayersWithBag]--;
 	InvisiblePlayerIcon(playerid);
-
 
 	return 1;
 }
@@ -228,10 +255,14 @@ stock AttachBagToPlayer(playerid)
 {
 	if (pInfo[playerid][pBag])
 	{
-		if (pInfo[playerid][pBackpackLvl] != 0)
+		if (pInfo[playerid][pBackpackLevel] != 0)
+		{
 			return SetPlayerAttachedObject(playerid, AMMU_SLOT_MONEY_BAG, 1550, 1,0.098999, -0.186999, 0.175999, -104.399940, 82.500068, 170.299896, 0.475999, 0.486000, 0.756996);
+		}
 		else
+		{
 			return SetPlayerAttachedObject(playerid, AMMU_SLOT_MONEY_BAG, 1550, 1, 0.154998, -0.157998, 0.070998, -104.399940, 82.500068, -118.700164, 0.475998, 0.486000, 0.756995);
+		}
 	}
 	else
 	{
@@ -244,7 +275,9 @@ static stock AddPlayerIDInArrayCollector(playerid)
 	for (new i = 0; i < MAX_COLLECTOR_VEHICLES; i++)
 	{
 		if (collector_playerid[i] == -1)
+		{
 			return collector_playerid[i] = playerid;
+		}
 	}
 
 	return 1;
@@ -267,7 +300,9 @@ stock ClearPlayerIDFromArrayCollector(playerid)
 }
 
 stock GetPlayerIDInArrayCollector(index)
+{
 	return collector_playerid[index];
+}
 
 public OnPlayerPickUpPickup(playerid, pickupid)
 {
@@ -353,7 +388,9 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 		modelid = GetVehicleModel(vehicleid);
 
 	if (modelid == COLLECTOR)
+	{
 		SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_ON, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF);
+	}
 
 	#if defined uiv_collector_OnPlayerEnterVeh
 		uiv_collector_OnPlayerEnterVeh(playerid, vehicleid, ispassenger);

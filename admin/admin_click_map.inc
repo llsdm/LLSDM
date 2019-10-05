@@ -9,7 +9,9 @@ static
 public OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ)
 {
 	if (click_map)
+	{
 		SetPlayerPosFindZ(playerid, fX, fY, fZ);
+	}
 
 	return 1;
 }
@@ -17,7 +19,9 @@ public OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ)
 CMD:maptp(playerid)
 {
 	if (pInfo[playerid][pAdmin] < 6)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	click_map = !click_map;
 	return SendClientMessage(playerid, COLOR_LIME, click_map ? !"Телепорт по метке включен" : !"Телепорт по метке выключен");

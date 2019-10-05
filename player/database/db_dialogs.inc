@@ -30,16 +30,15 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				s;
 
 			if (!(4 <= len <= MAX_PLAYER_PASSWORD))
+			{
 				war = true;
+			}
 
 			while ((s = inputtext[i++]) != '\0')
 			{
 				switch (s)
 				{
-					case '0'..'9', 'a'..'z', 'A'..'Z':
-					{
-						continue;
-					}
+					case '0'..'9', 'a'..'z', 'A'..'Z': continue;
 					default:
 					{
 						war = true;
@@ -48,9 +47,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 			}
 
-			printf("%i\n", war);
-
 			if (war)
+			{
 				return ShowPlayerDialog(playerid, dRegister, DIALOG_STYLE_INPUT, !"{FF0000}Ошибка: {FFFFFF}Вы не можете продолжить регистрацию не введя пароль!", 
 					!"{C0C0C0}Примечание:\n\
 					{666666}- Пароль чувствителен к регистру;\n\
@@ -58,6 +56,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					- Пароль может содержать латинские символы и цифры (aA-zZ, 0-9).\n\n\
 					{FFFFFF}Введите пароль для регистрации нового аккаунта:", 
 					!"Продолжить", !"Выход");
+			}
 
 			strcat((pInfo[playerid][pPassword][0] = EOS, pInfo[playerid][pPassword]), inputtext);
 			
@@ -79,17 +78,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				s;
 
 			if (at == -1)
+			{
 				war = true;
+			}
 
 			if (!(4 <= len <= MAX_PLAYER_EMAIL))
+			{
 				war = true;
+			}
 
 			while ((s = inputtext[i++]) != '\0')
 			{
 				switch (s)
 				{
-					case '0'..'9', 'a'..'z', 'A'..'Z', '.', '@', '-', '_':
-						continue;
+					case '0'..'9', 'a'..'z', 'A'..'Z', '.', '@', '-', '_': continue;
 					default:
 					{
 						war = true;
@@ -99,9 +101,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			}
 
 			if (war)
+			{
 				return ShowPlayerDialog(playerid, dRegister, DIALOG_STYLE_INPUT, !"{FF0000}Ошибка: {FFFFFF}Вы не можете продолжить регистрацию не введя адрес почты!", 
 					!"{FFFFFF}Введите адрес электронной почты для регистрации нового аккаунта:", 
 					!"Продолжить", !"Выход");
+			}
 
 			strcat((pInfo[playerid][pEmail][0] = EOS, pInfo[playerid][pEmail]), inputtext);
 			
@@ -121,16 +125,16 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				s;
 
 			if (len == 0)
+			{
 				return ShowPlayerDialog(playerid, dLogin, DIALOG_STYLE_INPUT, "Авторизация", "{FF0000}Ошибка: {FFFFFF}Вы не можете продолжить авторизацию не введя пароль!\nВведите пароль от аккаунта для входа на сервер:", "Вход", "Выход");
+			}
 
 			while ((s = inputtext[i++]) != '\0')
 			{
 				switch (s)
 				{
-					case '0'..'9', 'a'..'z', 'A'..'Z':
-						continue;
-					default:
-						return ShowPlayerDialog(playerid, dLogin, DIALOG_STYLE_INPUT, "Авторизация", "{FF0000}Ошибка: {FFFFFF}Введённый пароль содержит запрещённые символы!\nВведите пароль от аккаунта для входа на сервер:", "Вход", "Выход");
+					case '0'..'9', 'a'..'z', 'A'..'Z': continue;
+					default: return ShowPlayerDialog(playerid, dLogin, DIALOG_STYLE_INPUT, "Авторизация", "{FF0000}Ошибка: {FFFFFF}Введённый пароль содержит запрещённые символы!\nВведите пароль от аккаунта для входа на сервер:", "Вход", "Выход");
 				}
 			}
 

@@ -6,19 +6,29 @@
 CMD:ban(playerid, params[])
 {
 	if (pInfo[playerid][pAdmin] < 8)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	extract params -> new id, days, string:reason[30]; else
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: /ban [id] [Дни] [Причина]");
+	}
 
 	if (strlen(reason) > 30)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: допустимая длина сообщения 30 символов");
+	}
 
 	if (!IsPlayerConnected(id))
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: игрока нет в сети");
+	}
 
 	if (!(1 <= days <= 30))
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: количество дней должно быть от 1-го до 30-ти");
+	}
 
 	static const
 		str[] = "Администратор %s забанил %s на %i дней. Причина: %s",
@@ -52,16 +62,24 @@ CMD:ban(playerid, params[])
 CMD:kick(playerid, params[])
 {
 	if (pInfo[playerid][pAdmin] < 5)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	extract params -> new id, string:reason[32]; else
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: /kick [id] [Причина]");
+	}
 
 	if (strlen(reason) > 30)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: допустимая длина сообщения в 30 символов");
+	}
 
 	if (!IsPlayerConnected(id))
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: игрока нет в сети");
+	}
 
 	static const
 		str[] = "Администратор %s кикнул %s. Причина: %s";

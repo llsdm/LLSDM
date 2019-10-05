@@ -31,7 +31,9 @@ stock GiveAmmo(playerid, vehicleid)
 	for (new i = 0; i < UIV_MAX_AMMO; i++)
 	{
 		if (uiv[vehicleid][uiv_ammo][i] == 0)
+		{
 			break;
+		}
 
 		GetWeaponName(uiv[vehicleid][uiv_ammoID][i], name, MAX_WEAPON_NAME);
 		format(str, sizeof str, str_a, name, uiv[vehicleid][uiv_ammo][i], UIV_MAX_AMMO_IN_TRUCK);
@@ -66,7 +68,9 @@ static stock TakeAmmo(playerid, vehicleid, listitem, num)
 	TrunkOrRearDoorsOfVehicle(playerid);
 
 	if (num*BACKPACK_SIZE_AMMO > backpack)
-		return ShowPlayerReminder(playerid, pInfo[playerid][pBackpackLvl] == 0 ? !"Найдите рюкзак" : !"Рюкзак переполнен!\nПовысьте его уровень");
+	{
+		return ShowPlayerReminder(playerid, pInfo[playerid][pBackpackLevel] == 0 ? !"Найдите рюкзак" : !"Рюкзак переполнен!\nПовысьте его уровень");
+	}
 
 	PickUpPlayerAmmo(playerid, weaponid, num, false);
 	uiv[vehicleid][uiv_ammo][listitem] -= num;
@@ -106,15 +110,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	if (dialogid == UIV_TRUCK_DIALOG_AMMO_ID)
 	{
 		if (response == 0)
+		{
 			return TrunkOrRearDoorsOfVehicle(playerid);
+		}
 
 		truck_listitem{playerid} = listitem;
+		
 		return ShowPlayerDialog(playerid, UIV_TRUCK_DIALOG_AMMO_NUM_ID, DIALOG_STYLE_INPUT, !"Военный грузовик", !"Количество патронов:", !"Взять", !"Закрыть");
 	}
 	if (dialogid == UIV_TRUCK_DIALOG_AMMO_NUM_ID)
 	{
 		if (response == 0)
+		{
 			return TrunkOrRearDoorsOfVehicle(playerid);
+		}
 
 		new
 			listitemid = truck_listitem{playerid},
@@ -122,7 +131,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			ammo = strval(inputtext);
 
 		if (uiv[vehicleid][uiv_ammo][listitemid] < ammo)
+		{
 			ammo = uiv[vehicleid][uiv_ammo][listitemid];
+		}
 
 		return TakeAmmo(playerid, vehicleid, listitemid, ammo);
 	}

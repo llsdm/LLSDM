@@ -14,7 +14,9 @@ public UploadPlayerAccount(playerid)
 	cache_get_value_name_int(0, "pLife", pInfo[playerid][pLife]);
 	cache_get_value_name_float(0, "pHealth", pInfo[playerid][pHealth]);
 
-	cache_get_value_name_int(0, "pExpLife", pInfo[playerid][pExpLife]);
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		cache_get_value_name_int(0, "pExpLife", pInfo[playerid][pExpLife]);
+	#endif
 	cache_get_value_name_int(0, "pExp", pInfo[playerid][pExp]);
 	cache_get_value_name_int(0, "pMoney", pInfo[playerid][pMoney]);
 
@@ -25,17 +27,21 @@ public UploadPlayerAccount(playerid)
 
 	cache_get_value_name(0, "pWeapons", buff);
 	sscanf(buff, !"p<|>a<i>[3]", pInfo[playerid][pWeapons]);
+
+	cache_get_value_name(0, "pWeaponExp", buff);
+	sscanf(buff, !"p<|>a<i>[3]", pInfo[playerid][pWeaponExp]);
+
 	cache_get_value_name_int(0, "pSecondWeapon", pInfo[playerid][pSecondWeapon]);
 	cache_get_value_name(0, "pAmmo", buff);
 	sscanf(buff, !"p<|>a<i>[2]", pInfo[playerid][pAmmo]);
 
-	cache_get_value_name_int(0, "pBackpackLvl", pInfo[playerid][pBackpackLvl]);
+	cache_get_value_name_int(0, "pBackpackLvl", pInfo[playerid][pBackpackLevel]);
 	cache_get_value_name_int(0, "pBackpackSize", pInfo[playerid][pBackpackSize]);
 
 	cache_get_value_name(0, "pBackpackIndex", buff);
-	sscanf(buff, !"p<|>a<i>["#MAX_BACKPACK_SLOTS"]", backpack_index[playerid]);
+	sscanf(buff, !"p<|>a<i>["#LLSDM_MAX_BACKPACK_SLOTS"]", backpack_index[playerid]);
 	cache_get_value_name(0, "pBackpackNumber", buff);
-	sscanf(buff, !"p<|>a<i>["#MAX_BACKPACK_SLOTS"]", backpack_number[playerid]);
+	sscanf(buff, !"p<|>a<i>["#LLSDM_MAX_BACKPACK_SLOTS"]", backpack_number[playerid]);
 
 	if (pInfo[playerid][pLife] != 0)
 	{

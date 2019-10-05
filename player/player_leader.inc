@@ -6,9 +6,8 @@
 static enum
 {
 	PLAYER_LEADER_MONEY = 100,
-	PLAYER_LEADER_EXPERIENCE = 200,
 	PLAYER_LEADER_KILL_BONUS = 2
-}
+};
 
 const
 	PLAYER_LEADER_AUTO_SAVE = LLSDM_PARAMS_ON;
@@ -49,12 +48,13 @@ stock GetKillLeader()
 	if (leaderid != playerid && kills > 0)
 	{
 		leaderid = playerid;
-		format(string, sizeof string, str, pInfo[playerid][pName]);
+		pInfo[leaderid][pLeader] = true;
+		format(string, sizeof string, str, pInfo[leaderid][pName]);
 		SendClientMessageToAll(COLOR_LIME, string);
 	}
 
 	#if defined BILLBOARDS
-		UpdateBillboard(playerid, kills);
+		UpdateBillboard(leaderid, kills);
 
 		foreach (Player, i)
 		{
@@ -65,16 +65,30 @@ stock GetKillLeader()
 	return 1;
 }
 
-static stock GivePlayerExperience(playerid, kill_bonus = 1)
+static stock GivePlayerExperience(playerid, reason, kill_bonus)
 {
-	new
-		kills_life = pInfo[playerid][pKillsLife],
-		experience = (PLAYER_LEADER_EXPERIENCE*kill_bonus)*kills_life,
-		money = (PLAYER_LEADER_MONEY*kill_bonus)*kills_life;
 
+	new
+		weaponid = GetWeaponIndex(reason),
+		kills_life = pInfo[playerid][pKillsLife],
+		experience = pInfo[playerid][pWeaponExp][weaponid],
+		money = (kills_life*PLAYER_LEADER_MONEY)*kill_bonus;
+	
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		pInfo[playerid][pExpLife] += experience;
+	#endif
 	pInfo[playerid][pExp] += experience;
-	pInfo[playerid][pExpLife] += experience;
 	pInfo[playerid][pMoney] += money;
+	#if LLSDM_RESPAWN_WITH_SAVED == 1
+		if (pInfo[playerid][pExp] > LLSDM_MAX_VALUER_MONEY_EXP)
+		{
+			pInfo[playerid][pExp] = LLSDM_MAX_VALUER_MONEY_EXP;
+		}
+		if (pInfo[playerid][pMoney] > LLSDM_MAX_VALUER_MONEY_EXP)
+		{
+			pInfo[playerid][pMoney] = LLSDM_MAX_VALUER_MONEY_EXP;
+		}
+	#endif
 
 	return 1;
 }
@@ -82,10 +96,13 @@ static stock GivePlayerExperience(playerid, kill_bonus = 1)
 public OnPlayerDeath(playerid, killerid, reason)
 {
 	new
+		leader_update,
 		kill_bonus = 1;
 
-	pInfo[playerid][pMoney] =
-	pInfo[playerid][pExpLife] =
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		pInfo[playerid][pMoney] =
+		pInfo[playerid][pExpLife] =
+	#endif
 	pInfo[playerid][pKillsLife] =
 	pInfo[playerid][pTimeKill] = 0;
 	pInfo[playerid][pDeaths]++;
@@ -105,15 +122,30 @@ public OnPlayerDeath(playerid, killerid, reason)
 		if (playerid == leaderid && playerid != killerid)
 		{
 			kill_bonus = PLAYER_LEADER_KILL_BONUS;
+			pInfo[playerid][pLeader] = false;
+			GiveWeaponExpCardsPro(killerid, 1);
+			leader_update = 1;
 			SendClientMessage(killerid, COLOR_LIME, !"Вы убили лидера");
 			GetKillLeader();
+		}
+		else if (killerid != leaderid && playerid != killerid)
+		{
+			leader_update = 1;
+			GiveWeaponExpCards(killerid, 1);
+			GetKillLeader();
+		}
+
+		if (killerid == leaderid && leader_update == 0 && playerid != killerid)
+		{
+			kill_bonus = PLAYER_LEADER_KILL_BONUS;
+			GiveWeaponExpCardsPro(killerid, 1);
 		}
 
 		pInfo[killerid][pKillsLife]++;
 		pInfo[killerid][pKills]++;
 		pInfo[killerid][pTimeKill] = gettime();
 		
-		GivePlayerExperience(playerid, kill_bonus);
+		GivePlayerExperience(killerid, reason, kill_bonus);
 
 		#if defined TD_PLAYER_HUD
 			UpdateHudKills(killerid);
@@ -125,6 +157,11 @@ public OnPlayerDeath(playerid, killerid, reason)
 			SaveExp(killerid);
 		#endif
 	}
+
+	#if PLAYER_LEADER_AUTO_SAVE == LLSDM_PARAMS_ON
+		SaveDeath(playerid);
+		SaveExp(playerid);
+	#endif
 
 	#if defined player_leader_OnPlayerDeath
 		player_leader_OnPlayerDeath(playerid, killerid, reason);

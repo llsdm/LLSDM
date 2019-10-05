@@ -24,7 +24,9 @@ static const
 CMD:ahelp(playerid)
 {
 	if (pInfo[playerid][pAdmin] == 0)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	static
 		string[600];

@@ -55,7 +55,7 @@ public OnPlayerUpdate(playerid)
 		{
 			if (weaponid_now != weaponid_t2)
 			{
-				if (pInfo[playerid][pBackpackLvl] != 0)
+				if (pInfo[playerid][pBackpackLevel] != 0)
 				{
 					SetPlayerAttachedObject(playerid, AMMU_SLOT_WEAPON_2, GetWeaponModel(weaponid_t2), 1, 0.334998,-0.221999,-0.150997,-134.300094,-17.299985,174.499954,0.893999,1.000000,0.870998);
 				}
@@ -122,16 +122,22 @@ forward player_at_weap_OnPlayerUpdate(playerid);
 
 public OnPlayerDeath(playerid, killerid, reason)
 {
-	pInfo[playerid][pWeapons][0] =
-	pInfo[playerid][pWeapons][1] =
-	pInfo[playerid][pWeapons][2] =
-	pInfo[playerid][pSecondWeapon] =
-	pInfo[playerid][pAmmo][0] =
-	pInfo[playerid][pAmmo][1] =
-	ammu_tick[playerid] = 0;
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		pInfo[playerid][pWeapons][0] =
+		pInfo[playerid][pWeapons][1] =
+		pInfo[playerid][pWeapons][2] =
+		pInfo[playerid][pSecondWeapon] =
+		pInfo[playerid][pAmmo][0] =
+		pInfo[playerid][pAmmo][1] = 0;
+
+		SaveWeapon(playerid);
+	#endif
+
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_WEAPON_1);
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_WEAPON_2);
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_WEAPON_3);
+
+	ammu_tick[playerid] = 0;
 
 	#if defined player_at_weap_OnPlayerDeath
 		player_at_weap_OnPlayerDeath(playerid, killerid, reason);

@@ -66,8 +66,14 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 	}
 	
 	a = atan2(y-py, x-px)-90.0;
-	if (a < 0.0) a += 360.0;
-	else if (a >= 360.0) a -= 360.0;
+	if (a < 0.0) 
+	{
+		a += 360.0;
+	}
+	else if (a >= 360.0)
+	{
+		a -= 360.0;
+	}
 	x += (DIS_3D_DAMAGE * floatsin(-a, degrees));
 	y += (DIS_3D_DAMAGE * floatcos(-a, degrees));
 

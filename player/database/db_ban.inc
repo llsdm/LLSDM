@@ -39,7 +39,9 @@ public PlayerBan(playerid)
 		}
 	}
 	else
+	{
 		ShowPlayerDialog(playerid, dLogin, DIALOG_STYLE_INPUT, !"Авторизация", !"Введите пароль от аккаунта для того, чтоб продолжить игру:", !"Вход", !"Выход");
+	}
 
 	return 1;
 }

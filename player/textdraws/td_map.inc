@@ -5,8 +5,7 @@
 
 static enum
 {
-	MAX_PLAYERS_WITH_BAG = 10,
-	TD_MAP_TIMER_TIME = 1000
+	TD_MAP_TIMER_SPEED = 1000
 };
 
 static enum Float:
@@ -31,7 +30,7 @@ static
 
 	PlayerText:td_map_player_n[MAX_PLAYERS][2],
 	PlayerText:td_map_player_market[MAX_PLAYERS],
-	PlayerText:td_map_markets[MAX_PLAYERS][MAX_PLAYERS_WITH_BAG];
+	PlayerText:td_map_markets[MAX_PLAYERS][LLSDM_MAX_PLAYERS_WITH_BAG];
 
 public OnGameModeInit()
 {
@@ -190,7 +189,7 @@ static stock OpenTextDrawMap(playerid)
 			td_map_markets[playerid][i] = CreatePlayerTextDraw(playerid, 0.0, 0.0, !" ");
 		}
 
-		td_map_player_timer[playerid] = SetTimerEx("UpdateMapMarkets", TD_MAP_TIMER_TIME, true, "i", playerid);
+		td_map_player_timer[playerid] = SetTimerEx("UpdateMapMarkets", TD_MAP_TIMER_SPEED, true, "i", playerid);
 
 		SelectTextDraw(playerid, -1523963137);
 	}
@@ -294,15 +293,19 @@ public UpdateMapMarkets(playerid)
 		td_map_markets[playerid][i] = CreatePlayerTextDraw(playerid, td_x, td_y, !"hud:radar_light");
 
 		if (targetid == -1)
+		{
 			continue;
+		}
 
 		if (playerid == targetid)
+		{
 			continue;
+		}
 
 		GetPlayerPos(targetid, x, y, z);
 
-		td_x = (TD_MAP_POS_X + TD_MAP_SIZE_X * (x + 3000.0) / 6000.0)+TD_MAP_POS_ERROR_X; 
-		td_y = (TD_MAP_POS_Y + TD_MAP_SIZE_Y * (3100.0 - y) / 6000.0)+TD_MAP_POS_ERROR_Y;
+		td_x = (TD_MAP_POS_X + TD_MAP_SIZE_X * (x + 3000.0) / 6000.0) + TD_MAP_POS_ERROR_X; 
+		td_y = (TD_MAP_POS_Y + TD_MAP_SIZE_Y * (3100.0 - y) / 6000.0) + TD_MAP_POS_ERROR_Y;
 
 		PlayerTextDrawTextSize(playerid, td_map_markets[playerid][i], -4.0000, 5.0000);
 		PlayerTextDrawAlignment(playerid, td_map_markets[playerid][i], 1);

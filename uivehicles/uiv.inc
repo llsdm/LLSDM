@@ -6,7 +6,7 @@
 static enum
 {
 	UIV_ANIMS = 0,
-	UIV_TIMER = 300,
+	UIV_TIMER_SPEED = 300,
 
 	UIV_COLOR_WHITE = -1,
 	UIV_COLOR_YELLOW = 0xFFFFFF00,
@@ -17,6 +17,7 @@ static enum
 
 const
 	UIV_MAX_WEAPON_ID = 13,
+	UIV_MIN_EXP_WEAPON = 100,
 	UIV_MAX_KITS = 15,
 	UIV_MAX_WEAPONS = 3,
 	UIV_MAX_BACKPACKS = 10,
@@ -45,14 +46,16 @@ enum
 		Float:uiv_dist,
 		bool:uiv_drop,
 		bool:uiv_loot,
-		uiv_weapon,
 		uiv_time,
 		uiv_timer,
 		bool:uiv_hack,
 		bool:uiv_death,
 		uiv_pickup,
 		uiv_kits,
+		uiv_weapon,
+		uiv_weapon_exp,
 		uiv_weapons[UIV_MAX_WEAPONS],
+		uiv_weapons_exp[UIV_MAX_WEAPONS],
 		uiv_backpacks,
 		uiv_ammo[UIV_MAX_AMMO],
 		uiv_ammoID[UIV_MAX_AMMO]
@@ -74,7 +77,7 @@ new
 
 public OnGameModeInit()
 {
-	SetTimer(!"ShowUIVehicle", UIV_TIMER, true);
+	SetTimer(!"ShowUIVehicle", UIV_TIMER_SPEED, true);
 
 	#if defined uiv_OnGameModeInit
 		uiv_OnGameModeInit();
@@ -168,7 +171,9 @@ static stock SetVehicleDrop(vehicleid, bool:update = false)
 			case COLLECTOR:
 			{	
 				if (update)
+				{
 					return 1;
+				}
 
 				uiv[vehicleid][uiv_death] =
 				uiv[vehicleid][uiv_hack] = false;
@@ -193,12 +198,18 @@ static stock SetVehicleDrop(vehicleid, bool:update = false)
 			case POLICE_VAN:
 			{
 				for (new i = 0; i < UIV_MAX_WEAPONS; i++)
+				{
 					uiv[vehicleid][uiv_weapons][i] = random(UIV_MAX_WEAPON_ID)+22;
+					uiv[vehicleid][uiv_weapons_exp][i] = UIV_MIN_EXP_WEAPON*(random(3)+1);
+				}
 
-				uiv[vehicleid][uiv_backpacks] = random(4) == 0 ? 1 : random(UIV_MAX_BACKPACKS)+1;
-				return 1;
+				return uiv[vehicleid][uiv_backpacks] = random(4) == 0 ? 1 : random(UIV_MAX_BACKPACKS)+1;
 			}
-			case POLICE_LS..POLICE_JEEP: return uiv[vehicleid][uiv_weapon] = random(UIV_MAX_WEAPON_ID)+22;
+			case POLICE_LS..POLICE_JEEP:
+			{
+				uiv[vehicleid][uiv_weapon] = random(UIV_MAX_WEAPON_ID)+22;
+				uiv[vehicleid][uiv_weapon_exp] = UIV_MIN_EXP_WEAPON*(random(3)+1);
+			}
 		#endif
 	}
 
@@ -215,7 +226,9 @@ stock ResettingVehicleDropForPlayer()
 		modelid = GetVehicleModel(uiv_vehicleid[i]);
 
 		if (modelid == 0 || modelid == COLLECTOR)
+		{
 			continue;
+		}
 
 		TrunkOrRearDoorsOfVehicle(i);
 		ClosePlayerDialog(i);
@@ -238,7 +251,9 @@ public ShowUIVehicle()
 	for (new i = 1, j = GetVehiclePoolSize(); i <= j; i++)
 	{
 		if (!uiv[i][uiv_drop])
+		{
 			continue;
+		}
 
 		#if UIV_ANIMS == 0
 			size = uiv[i][uiv_size];
@@ -306,10 +321,14 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			if (IsVehicleStreamedIn(i, playerid))
 			{		
 				if (!uiv[i][uiv_drop])
+				{
 					continue;
+				}
 
 				if (uiv[i][uiv_loot])
+				{
 					continue;
+				}
 
 				dist = uiv[i][uiv_dist];
 				GetVehicleTrunk(i, x, y, z, dist, a);
@@ -333,7 +352,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 						#endif
 						#if defined UIV_POLICE
 							case POLICE_VAN: return GiveWeapons(playerid, i);
-							case POLICE_LS..POLICE_JEEP: return GiveWeapon(playerid, uiv[i][uiv_weapon], i);
+							case POLICE_LS..POLICE_JEEP: return GiveWeapon(playerid, uiv[i][uiv_weapon], uiv[i][uiv_weapon_exp], i);
 						#endif
 					}
 
@@ -363,7 +382,9 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 public OnPlayerDeath(playerid, killerid, reason)
 {
 	if (uiv_vehicleid[playerid] != 0)
+	{
 		TrunkOrRearDoorsOfVehicle(playerid);
+	}
 
 	#if defined uiv_OnPlayerDeath
 		uiv_OnPlayerDeath(playerid, killerid, reason);
@@ -386,7 +407,9 @@ public OnPlayerDeath(playerid, killerid, reason)
 public OnPlayerDisconnect(playerid, reason)
 {
 	if (uiv_vehicleid[playerid] != 0)
+	{
 		TrunkOrRearDoorsOfVehicle(playerid);
+	}
 
 	#if defined uiv_OnPlayerDisconnect
 		uiv_OnPlayerDisconnect(playerid, reason);

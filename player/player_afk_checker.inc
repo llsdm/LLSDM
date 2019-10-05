@@ -14,9 +14,13 @@ static
 stock IsPlayerAFK(playerid)
 {
 	if (GetTickCount() - player_afk[playerid] > PLAYER_AFK_TICK)
+	{
 		return 1;
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 public OnPlayerUpdate(playerid)

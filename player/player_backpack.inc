@@ -29,7 +29,9 @@ static enum
 	bAmmoRifle,
 	bAmmoSniper,
 	bKits,
-	bBaters
+	bBaters,
+	bWeaponExpCards,
+	bWeaponExpCardsPro
 };
 
 const
@@ -76,18 +78,20 @@ static const
 		"Патроны для Rifle",
 		"Патроны для Sniper",
 		"Аптечка",
-		"Барьеры"
+		"Барьеры",
+		"Карточка опыта оружия",
+		"Карточка опыта оружия PRO"
 	};
 
 static
-	backpack_listitem[MAX_PLAYERS][MAX_BACKPACK_SLOTS];
+	backpack_listitem[MAX_PLAYERS][LLSDM_MAX_BACKPACK_SLOTS];
 
 static stock GivePlayerSubject(playerid, index, num)
 {
 	new
 		id;
 
-	for (new i = BACKPACK_MIN_INDEX; i < MAX_BACKPACK_SLOTS; i++)
+	for (new i = BACKPACK_MIN_INDEX; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
 	{
 		id = backpack_index[playerid][i];
 
@@ -128,9 +132,11 @@ stock PickUpPlayerAmmo(playerid, weaponid, ammo, bool:clear_ammo = true)
 	weaponid -= BACKPACK_DIFFERENCE_IN_INDEX;
 
 	if (clear_ammo)
+	{
 		pInfo[playerid][pAmmo][typeid] = 0;
+	}
 
-	for (new i = BACKPACK_MIN_INDEX; i < MAX_BACKPACK_SLOTS; i++)
+	for (new i = BACKPACK_MIN_INDEX; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
 	{
 		index = backpack_index[playerid][i];
 
@@ -156,21 +162,29 @@ stock PickUpPlayerAmmo(playerid, weaponid, ammo, bool:clear_ammo = true)
 static stock ReplacePlayerWeapon(playerid, bool:show_backpack = false)
 {
 	new
-		weaponid = pInfo[playerid][pWeapons][1];
+		weaponid = pInfo[playerid][pWeapons][1],
+		level = pInfo[playerid][pWeaponExp][1];
 
 	PickUpPlayerAmmo(playerid, weaponid, pInfo[playerid][pAmmo][1]);
 
 	pInfo[playerid][pWeapons][1] = pInfo[playerid][pWeapons][2];
 	pInfo[playerid][pWeapons][2] = weaponid;
+	pInfo[playerid][pWeaponExp][1] = pInfo[playerid][pWeaponExp][2];
+	pInfo[playerid][pWeaponExp][2] = level;
+
 	pInfo[playerid][pSecondWeapon] = !pInfo[playerid][pSecondWeapon];
 
 	ResetPlayerWeapons(playerid);
 
 	if (pInfo[playerid][pAmmo][0] != 0)
+	{
 		GivePlayerWeapon(playerid, pInfo[playerid][pWeapons][0], pInfo[playerid][pAmmo][0]);
+	}
 
 	if (show_backpack)
+	{
 		OpenBackpack(playerid);
+	}
 
 	#if PLAYER_BACKPACK_AUTO_SAVE == LLSDM_PARAMS_ON
 		SaveBackpack(playerid);
@@ -185,11 +199,11 @@ static stock CheckBackpackIndex(playerid, index = BACKPACK_MIN_INDEX)
 	new
 		index_i;
 
-	for (new i = index; i < MAX_BACKPACK_SLOTS; i++)
+	for (new i = index; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
 	{
 		if (backpack_number[playerid][i] == 0)
 		{
-			index_i = i == MAX_BACKPACK_SLOTS - 1 ? 0 : 1;
+			index_i = i == LLSDM_MAX_BACKPACK_SLOTS - 1 ? 0 : 1;
 			backpack_number[playerid][i] = backpack_number[playerid][i+index_i];
 			backpack_number[playerid][i+index_i] = 0;
 			backpack_index[playerid][i] = backpack_index[playerid][i+index_i];
@@ -204,7 +218,7 @@ stock GetPlayerSubject(playerid, index, &index_i = 0)
 	new
 		id;
 
-	for (new i = BACKPACK_MIN_INDEX; i < MAX_BACKPACK_SLOTS; i++)
+	for (new i = BACKPACK_MIN_INDEX; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
 	{
 		id = backpack_index[playerid][i];
 
@@ -224,7 +238,7 @@ stock GetBackpackSize(playerid)
 		number,
 		size;
 
-	for (new i = BACKPACK_MIN_INDEX; i < MAX_BACKPACK_SLOTS; i++)
+	for (new i = BACKPACK_MIN_INDEX; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
 	{
 		index = backpack_index[playerid][i];
 		number = backpack_number[playerid][i];
@@ -244,10 +258,24 @@ stock GetBackpackSize(playerid)
 }
 
 stock GivePlayerKits(playerid, num)
+{
 	return GivePlayerSubject(playerid, bKits, num);
+}
 
 stock GetPlayerKits(playerid)
+{
 	return GetPlayerSubject(playerid, bKits);
+}
+
+stock GiveWeaponExpCards(playerid, num)
+{
+	return GivePlayerSubject(playerid, bWeaponExpCards, num);
+}
+
+stock GiveWeaponExpCardsPro(playerid, num)
+{
+	return GivePlayerSubject(playerid, bWeaponExpCardsPro, num);
+}
 
 static stock OpenBackpack(playerid)
 {
@@ -272,8 +300,12 @@ static stock OpenBackpack(playerid)
 
 	size =
 	listitem = 0;
-	exp_life = pInfo[playerid][pExpLife];
-	backpack = pInfo[playerid][pBackpackLvl];
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		exp_life = pInfo[playerid][pExpLife];
+	#else
+		exp_life = pInfo[playerid][pExp];
+	#endif
+	backpack = pInfo[playerid][pBackpackLevel];
 	price = backpack*BACKPACK_LVL_PRICE;
 	price = (exp_life >= price && backpack > 0) ? price : 0;
 	bag = pInfo[playerid][pBagMoney];
@@ -303,7 +335,7 @@ static stock OpenBackpack(playerid)
 		listitem++;
 	}
 
-	for (new i = BACKPACK_MIN_INDEX; i < MAX_BACKPACK_SLOTS; i++)
+	for (new i = BACKPACK_MIN_INDEX; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
 	{
 		index = backpack_index[playerid][i];
 		number = backpack_number[playerid][i];
@@ -325,12 +357,22 @@ static stock OpenBackpack(playerid)
 	}
 
 	if (backpack)
-		format(title, sizeof title, str_t1, backpack, size, pInfo[playerid][pBackpackSize], pInfo[playerid][pExpLife]);
+	{
+		#if LLSDM_RESPAWN_WITH_SAVED == 0
+			format(title, sizeof title, str_t1, backpack, size, pInfo[playerid][pBackpackSize], pInfo[playerid][pExpLife]);
+		#else
+			format(title, sizeof title, str_t1, backpack, size, pInfo[playerid][pBackpackSize], pInfo[playerid][pExp]);
+		#endif
+	}
 	else
+	{
 		format(title, sizeof title, str_t2, size, pInfo[playerid][pBackpackSize]);
+	}
 
 	if (listitem == 0)
+	{
 		return ShowPlayerDialog(playerid, 0, DIALOG_STYLE_MSGBOX, title, !"Пусто", !"Закрыть", "");
+	}
 
 	return ShowPlayerDialog(playerid, PLAYER_BACKPACK_DIALOG, DIALOG_STYLE_TABLIST_HEADERS, title, string, !"Взять", !"Закрыть");
 }
@@ -367,7 +409,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	if (dialogid == PLAYER_BACKPACK_DIALOG)
 	{
 		if (response == 0)
+		{
 			return 0;
+		}
 
 		new
 			index = backpack_listitem[playerid][listitem];
@@ -376,12 +420,16 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			case bImprove:
 			{
-				pInfo[playerid][pExpLife] -= BACKPACK_LVL_PRICE*pInfo[playerid][pBackpackLvl];
-				pInfo[playerid][pBackpackLvl]++;
-				pInfo[playerid][pBackpackSize] = pInfo[playerid][pBackpackLvl]*BACKPACK_LVL_SIZE;
+				#if LLSDM_RESPAWN_WITH_SAVED == 0
+					pInfo[playerid][pExpLife] -= BACKPACK_LVL_PRICE*pInfo[playerid][pBackpackLevel];
+				#else
+					pInfo[playerid][pExp] -= BACKPACK_LVL_PRICE*pInfo[playerid][pBackpackLevel];
+				#endif
+				pInfo[playerid][pBackpackLevel]++;
+				pInfo[playerid][pBackpackSize] = pInfo[playerid][pBackpackLevel]*BACKPACK_LVL_SIZE;
 
 				#if PLAYER_BACKPACK_AUTO_SAVE == LLSDM_PARAMS_ON
-					SaveBackpackLvl(playerid);
+					SaveBackpackLevel(playerid);
 					SaveExp(playerid);
 				#endif
 
@@ -390,6 +438,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			case bBag: return OpenBackpack(playerid);
 			case bSecondWeapon: return ReplacePlayerWeapon(playerid, true);
 			case bKits: return PlayerKit(playerid);
+			case bWeaponExpCards: ApplyWeaponExpCard(playerid, 1);
+			case bWeaponExpCardsPro: ApplyWeaponExpCard(playerid, 2);
 			default: 
 			{
 				new
@@ -403,7 +453,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				if (pInfo[playerid][pWeapons][typeid] != weaponid)
 				{
 					if (pInfo[playerid][pWeapons][2] != weaponid)
+					{
 						return ShowPlayerReminder(playerid, !"У Вас нет этого оружия", PLAYER_BACKPACK_REM_DIALOG);
+					}
 					else
 					{
 						PickUpPlayerAmmo(playerid, pInfo[playerid][pWeapons][typeid], pInfo[playerid][pAmmo][typeid]);
@@ -412,16 +464,22 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 
 				if (ammo == ammo_in_weap)
+				{
 					return OpenBackpack(playerid);
+				}
 
 				if (get_ammo+ammo_in_weap > ammo)
+				{
 					get_ammo = ammo-ammo_in_weap;
+				}
 
 				pInfo[playerid][pAmmo][typeid] += get_ammo;
 				GivePlayerSubjectIndex(playerid, index_i, -get_ammo);
 
 				if (backpack_number[playerid][index_i] == 0)
+				{
 					CheckBackpackIndex(playerid, index_i);
+				}
 
 				#if PLAYER_BACKPACK_AUTO_SAVE == LLSDM_PARAMS_ON
 					SaveBackpack(playerid);
@@ -436,7 +494,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		return 1;
 	}
 	if (dialogid == PLAYER_BACKPACK_REM_DIALOG)
+	{
 		return OpenBackpack(playerid);
+	}
 
 	#if defined player_backpack_OnPlayerDialogs
 		player_backpack_OnPlayerDialogs(playerid, dialogid, response, listitem, inputtext);
@@ -491,13 +551,17 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 					ammo_in_weap = pInfo[playerid][pAmmo][typeid];
 
 					if (get_ammo+ammo_in_weap > ammo)
+					{
 						get_ammo = ammo-ammo_in_weap;
+					}
 
 					pInfo[playerid][pAmmo][typeid] += get_ammo;
 					GivePlayerSubjectIndex(playerid, index_i, -get_ammo);
 
 					if (backpack_number[playerid][index_i] == 0)
+					{
 						CheckBackpackIndex(playerid, index_i);
+					}
 
 					#if PLAYER_BACKPACK_AUTO_SAVE == LLSDM_PARAMS_ON
 						SaveBackpack(playerid);
@@ -530,23 +594,28 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 
 public OnPlayerDeath(playerid, killerid, reason)
 {
-	for (new i = 0; i < MAX_BACKPACK_SLOTS; i++)
-	{
-		backpack_index[playerid][i] =
-		backpack_number[playerid][i] = 
-		backpack_listitem[playerid][i] = 0;
-	}
-	pInfo[playerid][pBackpackLvl] = 0;
-	pInfo[playerid][pBackpackSize] = NO_BACKPACK;
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		for (new i = 0; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
+		{
+			backpack_index[playerid][i] =
+			backpack_number[playerid][i] = 
+			backpack_listitem[playerid][i] = 0;
+		}
 
-	RemovePlayerAttachedObject(playerid, AMMU_SLOT_BACKPACK);
-	ClosePlayerDialog(playerid);
-	
-	#if PLAYER_BACKPACK_AUTO_SAVE == LLSDM_PARAMS_ON
-		SaveBackpackLvl(playerid);
-		SaveBackpack(playerid);
-		SaveWeapon(playerid);
+		pInfo[playerid][pBackpackLevel] = 0;
+		pInfo[playerid][pBackpackSize] = NO_BACKPACK;
+
+		RemovePlayerAttachedObject(playerid, AMMU_SLOT_BACKPACK);
+
+		#if PLAYER_BACKPACK_AUTO_SAVE == LLSDM_PARAMS_ON
+			SaveBackpackLevel(playerid);
+			SaveBackpack(playerid);
+			SaveWeapon(playerid);
+		#endif
+			
 	#endif
+
+	ClosePlayerDialog(playerid);
 
 	#if defined player_backpack_OnPlayerDeath
 		player_backpack_OnPlayerDeath(playerid, killerid, reason);
@@ -567,8 +636,10 @@ public OnPlayerDeath(playerid, killerid, reason)
 
 public OnPlayerDisconnect(playerid, reason)
 {
-	for (new i = 0; i < MAX_BACKPACK_SLOTS; i++)
+	for (new i = 0; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
+	{
 		backpack_listitem[playerid][i] = 0;
+	}
 
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_BACKPACK);
 
@@ -588,3 +659,10 @@ public OnPlayerDisconnect(playerid, reason)
 #if defined player_backpack_OnPlayerDis
 	forward player_backpack_OnPlayerDis(playerid, reason);
 #endif
+
+
+CMD:ca(playerid)
+{
+	GivePlayerSubject(playerid, bWeaponExpCards, 10);
+	return GivePlayerSubject(playerid, bWeaponExpCardsPro, 50);
+}

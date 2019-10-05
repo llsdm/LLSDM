@@ -39,6 +39,7 @@
 #include "../LLSDM/player/player_kit.inc"
 #include "../LLSDM/player/player_spawn.inc"
 #include "../LLSDM/player/player_leader.inc"
+#include "../LLSDM/player/player_weapon_exp_cards.inc"
 
 //admin
 	//CMD

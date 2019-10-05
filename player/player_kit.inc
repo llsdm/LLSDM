@@ -8,7 +8,7 @@
 static enum
 {
 	PLAYER_KIT_AUTO_SAVE = LLSDM_PARAMS_ON,
-	PLAYER_KIT_TIMER_ANIM = 3500
+	PLAYER_KIT_TIMER_SPEED_ANIM = 3500
 };
 
 static enum Float:
@@ -26,18 +26,24 @@ stock PlayerKit(playerid)
 		get_kits;
 
 	if (kit_timer[playerid] > 0)
+	{
 		return 0;
+	}
 	
 	if (GetPlayerState(playerid) != PLAYER_STATE_ONFOOT)
+	{
 		return 0;
+	}
 
 	get_kits = GetPlayerKits(playerid);
 
 	if (get_kits == 0)
+	{
 		return ShowPlayerReminder(playerid, !"У Вас нет аптечки", PLAYER_BACKPACK_REM_DIALOG);
+	}
 
 	SetPlayerArmedWeapon(playerid, 0);
-	kit_timer[playerid] = SetTimerEx(!"KitTimer", PLAYER_KIT_TIMER_ANIM, false, "i", playerid);
+	kit_timer[playerid] = SetTimerEx(!"KitTimer", PLAYER_KIT_TIMER_SPEED_ANIM, false, "i", playerid);
 	AttachKitToHand(playerid);
 	ApplyAnimation(playerid, !"PED", !"GUM_EAT", 4.1, 0, 0, 0, 0, 0, 1);
 
@@ -51,13 +57,19 @@ stock AttachKitToPlayer(playerid)
 
 	if (get_kits != 0)
 	{
-		if (pInfo[playerid][pBackpackLvl] != 0)
+		if (pInfo[playerid][pBackpackLevel] != 0)
+		{
 			return SetPlayerAttachedObject(playerid, AMMU_SLOT_KIT, 11736, 1, -0.026000, -0.148000, -0.272000, 175.500106, 12.899991, 4.100001, 0.516000, 0.479999, 1.000000);
+		}
 		else
+		{
 			return SetPlayerAttachedObject(playerid, AMMU_SLOT_KIT, 11736, 7, 0.054999, -0.028000, -0.081999, 175.500106, 2.399990, -8.599996, 0.515999, 0.479999, 1.000000);
+		}
 	}
 	else
+	{
 		return RemovePlayerAttachedObject(playerid, AMMU_SLOT_KIT);
+	}
 }
 
 forward KitTimer(playerid);
@@ -94,7 +106,9 @@ static stock OverdoseOfFirstAidKit(playerid, Float:health, Float:limit)
 		SetPlayerHealth(playerid, 100.0);
 	}
 	else
+	{
 		SetPlayerHealth(playerid, health);
+	}
 
 	return 1;
 }
@@ -104,6 +118,10 @@ public OnPlayerDeath(playerid, killerid, reason)
 	KillTimer(kit_timer[playerid]);
 	kit_timer[playerid] = 0;
 	RemovePlayerAttachedObject(playerid, AMMU_SLOT_KIT);
+
+	#if LLSDM_RESPAWN_WITH_SAVED == 1
+		pInfo[playerid][pHealth] = 100.0;
+	#endif
 
 	#if defined player_kit_OnPlayerDeath
 		player_kit_OnPlayerDeath(playerid, killerid, reason);

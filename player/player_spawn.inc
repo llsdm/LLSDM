@@ -5,16 +5,20 @@
 
 static enum
 {
-	MAX_AIR_OBJECTS = 4
-}
+	#if LLSDM_RESPAWN_WITH_SAVED == 1
+		PLAYER_SPAWN_TIMER_SPEED = 1000,
+		PLAYER_SPAWN_ANIM_KILL_TIMER = 1231,
+	#endif
+	PLAYER_SPAWN_MAX_AIR_OBJECTS = 4
+};
 
 static enum Float:
 {
-	SPAWN_DISTANCE_AREA = 1500.0,
-	AIR_DISTANCE = 4500.0,
-	AIR_FLIGHT = 400.0,
-	AIR_SPEED = 200.0
-}
+	PLAYER_SPAWN_DISTANCE_AREA = 1500.0,
+	PLAYER_SPAWN_AIR_DISTANCE = 4500.0,
+	PLAYER_SPAWN_AIR_FLIGHT = 400.0,
+	PLAYER_SPAWN_AIR_SPEED = 200.0
+};
 
 static enum
 	spawn_info
@@ -28,8 +32,11 @@ static enum
 
 static
 	SpawnInfo[MAX_PLAYERS][spawn_info],
+	#if LLSDM_RESPAWN_WITH_SAVED == 1
+		spawn_timer[MAX_PLAYERS],
+	#endif
 	bool:spawn_player[MAX_PLAYERS char],
-	spawn_objects[MAX_PLAYERS][MAX_AIR_OBJECTS],
+	spawn_objects[MAX_PLAYERS][PLAYER_SPAWN_MAX_AIR_OBJECTS] = {{-1, ...}, ...},
 	spawn_area[MAX_PLAYERS];
 
 public OnPlayerSpawn(playerid)
@@ -51,11 +58,10 @@ public OnPlayerSpawn(playerid)
 		SetPlayerSkin(playerid, pInfo[playerid][pSkin]);
 		SetPlayerHealth(playerid, pInfo[playerid][pHealth]);
 		
-		for (new i = 0, j = AMMU_SLOT_PROTOCOL+1; i < j; i++)
-			RemovePlayerAttachedObject(playerid, i);
-		
-		if (pInfo[playerid][pBackpackLvl] != 0)
+		if (pInfo[playerid][pBackpackLevel] != 0)
+		{
 			SetPlayerAttachedObject(playerid, AMMU_SLOT_BACKPACK, 371, 1, 0.016000, -0.115997, -0.020997, 0.000000, 86.999992, 0.000000, 1.351999, 1.102998,1.280998, 0xFF101010, 0xFF101010);
+		}
 
 		/**/
 		//SetPlayerAttachedObject(playerid, AMMU_SLOT_PROTOCOL, 1316, 1, -0.037,-0.303, -0.02, 90.0, 0.0, 0.0,   0.025, 0.025, 0.0, 0xFFFFFFFF, 0xFFFFFFFF);
@@ -70,7 +76,7 @@ public OnPlayerSpawn(playerid)
 	{
 		x = SpawnInfo[playerid][spawn_pos_x];
 		y = SpawnInfo[playerid][spawn_pos_y];
-		z = AIR_FLIGHT;
+		z = PLAYER_SPAWN_AIR_FLIGHT;
 		a = SpawnInfo[playerid][spawn_angle];
 		f_x = SpawnInfo[playerid][spawn_f_pos_x];
 		f_y = SpawnInfo[playerid][spawn_f_pos_y];
@@ -93,7 +99,7 @@ public OnPlayerSpawn(playerid)
 
 		AttachCameraToObject(playerid, obj1);
 
-		MoveObject(obj0, f_x, f_y, z, AIR_SPEED, 0.0, 0.0, a);
+		MoveObject(obj0, f_x, f_y, z, PLAYER_SPAWN_AIR_SPEED, 0.0, 0.0, a);
 
 		spawn_objects[playerid][0] = obj0;
 		spawn_objects[playerid][1] = obj1;
@@ -142,7 +148,9 @@ public OnPlayerEnterDynamicArea(playerid, areaid)
 		TogglePlayerSpectating(playerid, false);
 
 		for (new i = 0, j = _:spawn_info; i < j; i++)
+		{
 			SpawnInfo[playerid][spawn_info:i] = 0;
+		}
 
 		return 1;
 	}
@@ -166,9 +174,9 @@ public OnPlayerEnterDynamicArea(playerid, areaid)
 
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
-	if (HOLDING(KEY_SECONDARY_ATTACK))
+	if (spawn_player{playerid})
 	{
-		if (spawn_player{playerid})
+		if (HOLDING(KEY_SECONDARY_ATTACK))
 		{
 			static
 				Float:x,
@@ -185,7 +193,13 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			ToggleDynAreaSpectateMode(spawn_area[playerid], false);
 
 			for (new i = 0, j = _:spawn_info; i < j; i++)
+			{
 				SpawnInfo[playerid][spawn_info:i] = 0;
+			}
+
+			#if LLSDM_RESPAWN_WITH_SAVED == 1
+				SetTimerEx(!"PlayerLife", PLAYER_SPAWN_TIMER_SPEED, true, "i", playerid);
+			#endif
 
 			return 1;
 		}
@@ -218,10 +232,10 @@ public OnObjectMoved(objectid)
 
 		if (objectid == objectair)
 		{
-			for (new j = 0; j < MAX_AIR_OBJECTS; j++)
+			for (new j = 0; j < PLAYER_SPAWN_MAX_AIR_OBJECTS; j++)
 			{
 				DestroyObject(spawn_objects[i][j]);
-				spawn_objects[i][j] = 0;
+				spawn_objects[i][j] = -1;
 			}
 
 			break;
@@ -247,19 +261,45 @@ public OnObjectMoved(objectid)
 
 public OnPlayerDeath(playerid, killerid, reason)
 {
-	pInfo[playerid][pLife] = 0;
+	#if LLSDM_RESPAWN_WITH_SAVED == 1
+		if (spawn_timer[playerid] != -1)
+		{
+			KillTimer(spawn_timer[playerid]);
+			spawn_timer[playerid] = -1;
+		}
+	#endif
+
 	spawn_player{playerid} = false;
 
 	DestroyDynamicArea(spawn_area[playerid]);
 	spawn_area[playerid] = 0;
 
-	for (new i = 0; i < MAX_AIR_OBJECTS; i++)
+	for (new i = 0; i < PLAYER_SPAWN_MAX_AIR_OBJECTS; i++)
 	{
 		DestroyObject(spawn_objects[playerid][i]);
-		spawn_objects[playerid][i] = 0;
+		spawn_objects[playerid][i] = -1;
 	}
 
-	CreateSpawnInfo(playerid);
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		pInfo[playerid][pLife] = 0;
+		CreateSpawnInfo(playerid);
+	#else
+		new
+			Float:pos_x, Float:pos_y, Float:pos_z,
+			Float:angle;
+
+		if (pInfo[playerid][pLife] == 0)
+		{
+			CreateSpawnInfo(playerid);
+		}
+		else
+		{
+			GetPlayerPos(playerid, pos_x, pos_y, pos_z);
+			GetPlayerFacingAngle(playerid, angle);
+
+			SetSpawnInfo(playerid, 0, pInfo[playerid][pSkin], pos_x, pos_y, pos_z, angle, 0, 0, 0, 0, 0, 0);
+		}
+	#endif
 
 	#if defined player_spawn_OnPlayerDeath
 		player_spawn_OnPlayerDeath(playerid, killerid, reason);
@@ -280,19 +320,29 @@ public OnPlayerDeath(playerid, killerid, reason)
 
 public OnPlayerDisconnect(playerid, reason)
 {
+	#if LLSDM_RESPAWN_WITH_SAVED == 1
+		if (spawn_timer[playerid] != -1)
+		{
+			KillTimer(spawn_timer[playerid]);
+			spawn_timer[playerid] = -1;
+		}
+	#endif
+
 	spawn_player{playerid} = false;
 
 	DestroyDynamicArea(spawn_area[playerid]);
 	spawn_area[playerid] = 0;
 
-	for (new i = 0; i < MAX_AIR_OBJECTS; i++)
+	for (new i = 0; i < PLAYER_SPAWN_MAX_AIR_OBJECTS; i++)
 	{
 		DestroyObject(spawn_objects[playerid][i]);
-		spawn_objects[playerid][i] = 0;
+		spawn_objects[playerid][i] = -1;
 	}
 
 	for (new i = 0, j = _:spawn_info; i < j; i++)
+	{
 		SpawnInfo[playerid][spawn_info:i] = 0;
+	}
 
 	#if defined player_spawn_OnPlayerDisconnect
 		player_spawn_OnPlayerDisconnect(playerid, reason);
@@ -321,8 +371,8 @@ stock CreateSpawnInfo(playerid)
 		Float:angle;
 
 	GetDirectionOfAircraft(angle, pos_x, pos_y, f_pos_x, f_pos_y, 180.0);
-	SetSpawnInfo(playerid, 0, pInfo[playerid][pSkin], pos_x, pos_y, AIR_FLIGHT-1.0, angle, 0, 0, 0, 0, 0, 0);
-	spawn_area[playerid] = CreateDynamicRectangle(f_pos_x-SPAWN_DISTANCE_AREA, f_pos_y-SPAWN_DISTANCE_AREA, f_pos_x+SPAWN_DISTANCE_AREA, f_pos_y+SPAWN_DISTANCE_AREA, .playerid = playerid);
+	SetSpawnInfo(playerid, 0, pInfo[playerid][pSkin], pos_x, pos_y, PLAYER_SPAWN_AIR_FLIGHT-1.0, angle, 0, 0, 0, 0, 0, 0);
+	spawn_area[playerid] = CreateDynamicRectangle(f_pos_x-PLAYER_SPAWN_DISTANCE_AREA, f_pos_y-PLAYER_SPAWN_DISTANCE_AREA, f_pos_x+PLAYER_SPAWN_DISTANCE_AREA, f_pos_y+PLAYER_SPAWN_DISTANCE_AREA, .playerid = playerid);
 
 	SpawnInfo[playerid][spawn_pos_x] = pos_x;
 	SpawnInfo[playerid][spawn_pos_y] = pos_y;
@@ -336,7 +386,7 @@ stock CreateSpawnInfo(playerid)
 stock GetDirectionOfAircraft(&Float:angle, &Float:x, &Float:y, &Float:fpoint_x, &Float:fpoint_y, Float:fault = 0.0)
 {
 	new
-		Float:distance = AIR_DISTANCE;
+		Float:distance = PLAYER_SPAWN_AIR_DISTANCE;
 
 	angle = floatrandom(360);
 	x = distance * -floatsin(angle, degrees);
@@ -346,7 +396,23 @@ stock GetDirectionOfAircraft(&Float:angle, &Float:x, &Float:y, &Float:fpoint_x, 
 	angle += fault + floatrandom(90) - 60.0;
 	fpoint_x = x + distance * -floatsin(angle, degrees);
 	fpoint_y = y + distance * floatcos(angle, degrees);
-	distance = AIR_DISTANCE;
+	distance = PLAYER_SPAWN_AIR_DISTANCE;
 
 	return 1;
 }
+
+#if LLSDM_RESPAWN_WITH_SAVED == 1
+	forward PlayerLife(playerid);
+	public PlayerLife(playerid)
+	{
+		if (GetPlayerAnimationIndex(playerid) == PLAYER_SPAWN_ANIM_KILL_TIMER)
+		{
+			KillTimer(spawn_timer[playerid]);
+			spawn_timer[playerid] = -1;
+			pInfo[playerid][pLife] = 1;
+			SaveLife(playerid);
+		}
+
+		return 1;
+	}
+#endif

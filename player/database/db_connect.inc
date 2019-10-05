@@ -41,7 +41,9 @@ public FindPlayerInTable(playerid)
 	cache_get_row_count(rows);
  
 	if(!rows)
+	{
 		ShowPlayerDialog(playerid, dRegister, DIALOG_STYLE_INPUT, !"Регистрация нового пользователя", !"Введите пароль для регистрации нового аккаунта:", !"Продолжить", !"Выход");
+	}
 	else
 	{
 		static const

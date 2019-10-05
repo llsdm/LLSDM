@@ -13,8 +13,10 @@ static
 
 CMD:restart(playerid, params[])
 {
-	if (pInfo[playerid][pAdmin] != MAX_ADMIN_LEVELS)
+	if (pInfo[playerid][pAdmin] != LLSDM_MAX_ADMIN_LEVELS)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	SendClientMessageToAll(COLOR_ADMIN, !"Через 5 минут рестарт сервера!");
 
@@ -25,11 +27,15 @@ CMD:restart(playerid, params[])
 
 CMD:stoprestart(playerid, params[])
 {
-	if (pInfo[playerid][pAdmin] != MAX_ADMIN_LEVELS)
+	if (pInfo[playerid][pAdmin] != LLSDM_MAX_ADMIN_LEVELS)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	if (restart_timer_now == 0)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Рестарт сервера не запущен");
+	}
 
 	SendClientMessageToAll(COLOR_ADMIN, !"Рестарт сервера отменен!");
 

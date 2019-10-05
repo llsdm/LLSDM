@@ -40,7 +40,9 @@ static stock TakeKit(playerid, vehicleid, num)
 	TrunkOrRearDoorsOfVehicle(playerid);
 
 	if (num*BACKPACK_SIZE_KIT > backpack)
-		return ShowPlayerReminder(playerid, pInfo[playerid][pBackpackLvl] == 0 ? !"Найдите рюкзак" : !"Рюкзак переполнен!\nПовысьте его уровень");
+	{
+		return ShowPlayerReminder(playerid, pInfo[playerid][pBackpackLevel] == 0 ? !"Найдите рюкзак" : !"Рюкзак переполнен!\nПовысьте его уровень");
+	}
 
 	GivePlayerKits(playerid, num);
 	AttachKitToPlayer(playerid);
@@ -66,21 +68,27 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	if (dialogid == UIV_AMBULANCE_DIALOG_D1)
 	{
 		if (response == 0)
+		{
 			return TrunkOrRearDoorsOfVehicle(playerid);
+		}
 		
 		return ShowPlayerDialog(playerid, UIV_AMBULANCE_DIALOG_D2, DIALOG_STYLE_INPUT, !"Карета скорой помощи", !"Количество аптечек:", !"Взять", !"Закрыть");
 	}
 	if (dialogid == UIV_AMBULANCE_DIALOG_D2)
 	{
 		if (response == 0)
+		{
 			return TrunkOrRearDoorsOfVehicle(playerid);
+		}
 
 		new
 			vehicleid = uiv_vehicleid[playerid],
 			kits = strval(inputtext);
 
 		if (uiv[vehicleid][uiv_kits] < kits)
+		{
 			kits = uiv[vehicleid][uiv_kits];
+		}
 
 		return TakeKit(playerid, vehicleid, kits);
 	}

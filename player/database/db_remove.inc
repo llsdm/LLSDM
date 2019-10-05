@@ -14,7 +14,6 @@ stock RemovePlayerInfo(playerid)
 	pInfo[playerid][pSkin] =
 	pInfo[playerid][pLife] =
 
-	pInfo[playerid][pExpLife] =
 	pInfo[playerid][pExp] =
 	pInfo[playerid][pMoney] =
 	pInfo[playerid][pBagMoney] =
@@ -27,18 +26,25 @@ stock RemovePlayerInfo(playerid)
 	pInfo[playerid][pWeapons][0] =
 	pInfo[playerid][pWeapons][1] =
 	pInfo[playerid][pWeapons][2] =
+	pInfo[playerid][pWeaponExp][0] =
+	pInfo[playerid][pWeaponExp][1] =
+	pInfo[playerid][pWeaponExp][2] =
 	pInfo[playerid][pSecondWeapon] =
 	pInfo[playerid][pAmmo][0] =
 	pInfo[playerid][pAmmo][1] =
 
-	pInfo[playerid][pBackpackLvl] =
+	pInfo[playerid][pBackpackLevel] =
 	pInfo[playerid][pBackpackSize] = 0;
+
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		pInfo[playerid][pExpLife] = 0;
+	#endif
 
 	pInfo[playerid][pHealth] = 0.0;
 
 	pInfo[playerid][pBag] = false;
 
-	for (new i = 0; i < MAX_BACKPACK_SLOTS; i++)
+	for (new i = 0; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
 	{
 		backpack_index[playerid][i] =
 		backpack_number[playerid][i] = 0;

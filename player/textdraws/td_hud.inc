@@ -3,14 +3,14 @@
 #endif
 #define TD_PLAYER_HUD
 
+static enum
+{
+	TD_HUD_TIMER_SPEED = 1000
+};
+
 static enum Float:
 {
 	TD_HUD_SIZE_HEALTH = 74.3300
-};
-
-static enum
-{
-	TD_HUD_TIMER_TIME = 1000
 };
 
 static enum
@@ -44,7 +44,7 @@ static const
 	{
 		17, 17, 7, 5, 4, 7, 50, 30, 30, 50, 50, 1, 1
 	},
-	td_hud_weapon_slots[] =
+	td_hud_weapon_type[] =
 	{
 		2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 4, 6, 6
 	},
@@ -85,6 +85,7 @@ static
 	PlayerText:td_hud_player_weapon_ammo_block[MAX_PLAYERS],
 	PlayerText:td_hud_player_weapon_name[MAX_PLAYERS],
 	PlayerText:td_hud_player_weapon_ammo[MAX_PLAYERS],
+	PlayerText:td_hud_player_weapon_exp[MAX_PLAYERS],
 	PlayerText:td_hud_player_health[MAX_PLAYERS],
 	PlayerText:td_hud_player_health_line[MAX_PLAYERS],
 	PlayerText:td_hud_player_experience[MAX_PLAYERS],
@@ -309,6 +310,15 @@ public OnPlayerConnect(playerid)
 	PlayerTextDrawSetPreviewModel(playerid, td_hud_player_weapon_model[playerid], 0);
 	PlayerTextDrawSetPreviewRot(playerid, td_hud_player_weapon_model[playerid], 0.0000, 0.0000, 0.0000, 2.7000);
 
+	td_hud_player_weapon_exp[playerid] = CreatePlayerTextDraw(playerid, 615.1336, 15.5407, " ");
+	PlayerTextDrawLetterSize(playerid, td_hud_player_weapon_exp[playerid], 0.2836, 1.0524);
+	PlayerTextDrawAlignment(playerid, td_hud_player_weapon_exp[playerid], 3);
+	PlayerTextDrawColor(playerid, td_hud_player_weapon_exp[playerid], -1);
+	PlayerTextDrawBackgroundColor(playerid, td_hud_player_weapon_exp[playerid], 255);
+	PlayerTextDrawFont(playerid, td_hud_player_weapon_exp[playerid], 3);
+	PlayerTextDrawSetProportional(playerid, td_hud_player_weapon_exp[playerid], 1);
+	PlayerTextDrawSetShadow(playerid, td_hud_player_weapon_exp[playerid], 0);
+
 	//health
 	td_hud_player_health[playerid] = CreatePlayerTextDraw(playerid, 560.1303, 56.6655, !"0HP");
 	PlayerTextDrawLetterSize(playerid, td_hud_player_health[playerid], 0.2196, 1.0109);
@@ -392,6 +402,7 @@ public OnPlayerSpawn(playerid)
 
 		PlayerTextDrawShow(playerid, td_hud_player_weapon_name[playerid]);
 		PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo[playerid]);
+		PlayerTextDrawShow(playerid, td_hud_player_weapon_exp[playerid]);
 
 		PlayerTextDrawShow(playerid, td_hud_player_health[playerid]);
 		PlayerTextDrawShow(playerid, td_hud_player_health_line[playerid]);
@@ -400,7 +411,7 @@ public OnPlayerSpawn(playerid)
 		PlayerTextDrawShow(playerid, td_hud_player_money[playerid]);
 		UpdateHudExperience(playerid);
 
-		td_hud_player_timer[playerid] = SetTimerEx(!"PlayerHudTimer", TD_HUD_TIMER_TIME, true, "i", playerid);
+		td_hud_player_timer[playerid] = SetTimerEx(!"PlayerHudTimer", TD_HUD_TIMER_SPEED, true, "i", playerid);
 	}
 
 	#if defined td_hud_OnPlayerSpawn
@@ -423,17 +434,21 @@ public OnPlayerSpawn(playerid)
 stock UpdateHudWeapon(playerid, weaponid)
 {
 	new
-		slot = td_hud_weapon_slots[weaponid],
+		type = td_hud_weapon_type[weaponid],
+		slot = GetWeaponIndex(weaponid+22),
 		weapon,
 		ammo,
-		string[6];
+		string[13];
 
 	PlayerTextDrawSetString(playerid, td_hud_player_weapon_name[playerid], td_hud_weapon_name[weaponid]);
 
-	GetPlayerWeaponData(playerid, slot, weapon, ammo);
-	printf("%i, %i, %i\n", weaponid, weapon, ammo);
+	GetPlayerWeaponData(playerid, type, weapon, ammo);
 	format(string, sizeof string, "%02i/%02i", ammo, td_hud_weapon_ammo[weaponid]);
 	PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], string);
+
+	format(string, sizeof string, "+%iXP", pInfo[playerid][pWeaponExp][slot]);
+	PlayerTextDrawSetString(playerid, td_hud_player_weapon_exp[playerid], string);
+	PlayerTextDrawShow(playerid, td_hud_player_weapon_exp[playerid]);
 
 	PlayerTextDrawTextSize(playerid, td_hud_player_weapon_ammo_block[playerid], 24.0000, 1.2400);
 	PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo_block[playerid]);
@@ -464,6 +479,17 @@ stock UpdateHudWeaponAmmo(playerid, weaponid, ammo)
 	format(string, sizeof string, "%02i/%02i", ammo, td_hud_weapon_ammo[weaponid-22]);
 	PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], string);
 	
+	return 1;
+}
+
+stock UpdateWeaponExp(playerid, slot)
+{
+	new
+		string[13];
+
+	format(string, sizeof string, "+%iXP", pInfo[playerid][pWeaponExp][slot]);
+	PlayerTextDrawSetString(playerid, td_hud_player_weapon_exp[playerid], string);
+
 	return 1;
 }
 
@@ -502,7 +528,11 @@ stock UpdateHudHealth(playerid, Float:health)
 stock UpdateHudExperience(playerid)
 {
 	new
-		experience = pInfo[playerid][pExpLife],
+		#if LLSDM_RESPAWN_WITH_SAVED == 0
+			experience = pInfo[playerid][pExpLife],
+		#else
+			experience = pInfo[playerid][pExp],
+		#endif
 		money = pInfo[playerid][pMoney],
 		string[12];
 
@@ -537,6 +567,7 @@ public PlayerHudTimer(playerid)
 			PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo_block[playerid]);
 	
 			PlayerTextDrawDestroy(playerid, td_hud_player_weapon_model[playerid]);
+			PlayerTextDrawHide(playerid, td_hud_player_weapon_exp[playerid]);
 
 			td_hud_player_weapon_model[playerid] = CreatePlayerTextDraw(playerid, 641.5831, -10.9888, "");
 			PlayerTextDrawTextSize(playerid, td_hud_player_weapon_model[playerid], -88.0000, 108.0000);
@@ -556,6 +587,7 @@ public PlayerHudTimer(playerid)
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_name[playerid], "Fists");
 			PlayerTextDrawSetString(playerid, td_hud_player_weapon_ammo[playerid], " ");
 			PlayerTextDrawHide(playerid, td_hud_player_weapon_model[playerid]);
+			PlayerTextDrawHide(playerid, td_hud_player_weapon_exp[playerid]);
 
 			PlayerTextDrawTextSize(playerid, td_hud_player_weapon_ammo_block[playerid], 24.0000, 8.3000);
 			PlayerTextDrawShow(playerid, td_hud_player_weapon_ammo_block[playerid]);
@@ -566,7 +598,7 @@ public PlayerHudTimer(playerid)
 
 	GetPlayerHealth(playerid, health);
 
-	if (health > 0)
+	if (health > 0.0)
 	{
 		UpdateHudHealth(playerid, health);
 	}
@@ -630,6 +662,7 @@ public OnPlayerDisconnect(playerid, reason)
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_name[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_ammo_block[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_ammo[playerid]);
+	PlayerTextDrawDestroy(playerid, td_hud_player_weapon_exp[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_health[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_health_line[playerid]);
 	PlayerTextDrawDestroy(playerid, td_hud_player_experience[playerid]);

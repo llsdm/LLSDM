@@ -35,7 +35,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	if (dialogid == UIV_EDITOR_DIALOGID_CREATE_VEHICLE)
 	{
 		if (response == 0)
+		{
 			return 0;
+		}
 
 		static const
 			str[] = "INSERT INTO `vehicles` (`modelid`, `status`, `group`, `pos_x`, `pos_y`, `pos_z`, `angle`) VALUES ('%i', '1', '%i', '%.4f', '%.4f', '%.4f', '%.4f')";
@@ -53,7 +55,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		vehicleid = CreateUIVehicle(modelid, x, y, z, a);
 
 		if (modelid == COLLECTOR)
+		{
 			MAX_COLLECTOR_VEHICLES++;
+		}
 
 
 		PutPlayerInVehicle(playerid, vehicleid, 0);
@@ -92,7 +96,9 @@ public UploadVehicleNumber(vehicleid) uiv[vehicleid][uiv_index] = cache_insert_i
 CMD:create(playerid)
 {
 	if (pInfo[playerid][pAdmin] != 10)
-			return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	{
+		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	return ShowPlayerDialog(playerid, UIV_EDITOR_DIALOGID_CREATE_VEHICLE, DIALOG_STYLE_LIST, !"#UIV_EDITOR_TITLE", !"AMBULANCE\nCOLLECTOR\nTRUCK\nPOLICE_VAN\nPOLICE_LS\nPOLICE_SF\nPOLICE_LV\nPOLICE_JEEP", !"Выбрать", !"Закрыть");	
 }
@@ -100,7 +106,9 @@ CMD:create(playerid)
 CMD:saveh(playerid)
 {
 	if (pInfo[playerid][pAdmin] != 10)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	static const
 		str[] = "UPDATE `vehicles` SET `pos_x` = '%.4f', `pos_y` = '%.4f', `pos_z` = '%.4f', `angle` = '%.4f' WHERE `index` = '%i'";
@@ -111,7 +119,9 @@ CMD:saveh(playerid)
 		string[sizeof str + (4+1+4)*4 + 11 - (2 + 4*4)];
 
 	if (vehicleid == 0)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не в транспортном средстве!");
+	}
 
 	GetVehiclePos(vehicleid, x, y, z);
 	GetVehicleZAngle(vehicleid, a);
@@ -132,7 +142,9 @@ CMD:saveh(playerid)
 CMD:delveh(playerid)
 {
 	if (pInfo[playerid][pAdmin] != 10)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	static const
 		str[] = "DELETE FROM `vehicles` WHERE `index` = '%i'";
@@ -143,7 +155,9 @@ CMD:delveh(playerid)
 		string[sizeof str + 4 - 2];
 
 	if (vehicleid == 0)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не в транспортном средстве!");
+	}
 
 	format(string, sizeof string, str, uiv[vehicleid][uiv_index]);
 		
@@ -188,13 +202,17 @@ CMD:delveh(playerid)
 		case TRUCK:
 		{
 			for (new i = 0; i < UIV_MAX_AMMO; i++)
+			{
 				uiv[vehicleid][uiv_ammo][i] =
 				uiv[vehicleid][uiv_ammoID][i] = 0;
+			}
 		}
 		case POLICE_VAN:
 		{
 			for (new i = 0; i < UIV_MAX_WEAPONS; i++)
+			{
 				uiv[vehicleid][uiv_weapons][i] = 0;
+			}
 
 			uiv[vehicleid][uiv_backpacks] = 0;
 		}

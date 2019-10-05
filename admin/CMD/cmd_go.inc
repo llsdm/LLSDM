@@ -6,10 +6,14 @@
 CMD:goto(playerid, params[])
 {
 	if (pInfo[playerid][pAdmin] < 5)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	if (isnull(params))
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: /goto [id]");
+	}
 
 	static const
 		str_p[] = "Вы телепортировались к {FFFFFF}%s [%i]",
@@ -23,10 +27,14 @@ CMD:goto(playerid, params[])
 		Float:z;
 
 	if (id == playerid)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: вы указали свой ID");
+	}
 
 	if (!IsPlayerConnected(id))
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: игрока с этим ID не найдено");
+	}
 
 	GetPlayerPos(id, x, y, z);
 	SetPlayerPos(playerid, x+5, y, z);
@@ -43,10 +51,14 @@ CMD:goto(playerid, params[])
 CMD:gome(playerid, params[])
 {
 	if (pInfo[playerid][pAdmin] < 5)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Вы не уполномочены использовать данную команду!");
+	}
 
 	if (isnull(params))
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: /gome [id]");
+	}
 
 	static const
 		str_p[] = "Вы телепортировали к себе {FFFFFF}%s [%i]",
@@ -60,10 +72,14 @@ CMD:gome(playerid, params[])
 		Float:z;
 
 	if (id == playerid)
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: вы указали свой ID");
+	}
 
 	if (!IsPlayerConnected(id))
+	{
 		return SendClientMessage(playerid, COLOR_ERROR, !"Ошибка: игрока с этим ID не найдено");
+	}
 
 	GetPlayerPos(playerid, x, y, z);
 	SetPlayerPos(id, x+5, y, z);

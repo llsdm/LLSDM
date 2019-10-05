@@ -6,7 +6,9 @@
 stock SaveLife(playerid)
 {
 	if (!IsPlayerAuthorized(playerid))
+	{
 		return 0;
+	}
 
 	static const
 		str[] = "UPDATE `accounts` SET `pLife` = '%i' WHERE `pID` = '%i'";
@@ -17,17 +19,23 @@ stock SaveLife(playerid)
 	new
 		result;
 
-	result += pInfo[playerid][pExpLife]+pInfo[playerid][pMoney];
-	result += pInfo[playerid][pWeapons][0]+pInfo[playerid][pWeapons][1]+pInfo[playerid][pAmmo][0]+pInfo[playerid][pAmmo][1]+pInfo[playerid][pWeapons][2];
-	result += pInfo[playerid][pBackpackLvl];
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		result += pInfo[playerid][pExpLife]+pInfo[playerid][pMoney];
+		result += pInfo[playerid][pExp]+pInfo[playerid][pMoney];
 
-	for (new i = 4; i < MAX_BACKPACK_SLOTS; i++)
-	{
-		result += backpack_index[playerid][i];
-		result += backpack_number[playerid][i];
-	}
+		result += pInfo[playerid][pWeapons][0]+pInfo[playerid][pWeapons][1]+pInfo[playerid][pAmmo][0]+pInfo[playerid][pAmmo][1]+pInfo[playerid][pWeapons][2];
+		result += pInfo[playerid][pBackpackLevel];
 
-	result = !!result;
+		for (new i = 4; i < LLSDM_MAX_BACKPACK_SLOTS; i++)
+		{
+			result += backpack_index[playerid][i];
+			result += backpack_number[playerid][i];
+		}
+
+		result = !!result;
+	#else
+		result = pInfo[playerid][pLife];
+	#endif
  
 	format(string, sizeof string, str,
 		result,
@@ -41,20 +49,37 @@ stock SaveLife(playerid)
 stock SaveExp(playerid)
 {
 	if (!IsPlayerAuthorized(playerid))
+	{
 		return 0;
+	}
 
-	static const
-		str[] = "UPDATE `accounts` SET `pExpLife` = '%i', `pExp` = '%i', `pMoney` = '%i' WHERE `pID` = '%i'";
+	#if LLSDM_RESPAWN_WITH_SAVED == 0
+		static const
+			str[] = "UPDATE `accounts` SET `pExpLife` = '%i', `pExp` = '%i', `pMoney` = '%i' WHERE `pID` = '%i'";
 
-	static
-		string[sizeof str + 5*11 - 5*2];
- 
-	format(string, sizeof string, str,
-		pInfo[playerid][pExpLife],
-		pInfo[playerid][pExp],
-		pInfo[playerid][pMoney],
-		pInfo[playerid][pID]
-	);
+		static
+			string[sizeof str + 4*11 - 4*2];
+	 
+		format(string, sizeof string, str,
+			pInfo[playerid][pExpLife],
+			pInfo[playerid][pExp],
+			pInfo[playerid][pMoney],
+			pInfo[playerid][pID]
+		);
+	#else
+		static const
+			str[] = "UPDATE `accounts` SET `pExp` = '%i', `pMoney` = '%i' WHERE `pID` = '%i'";
+
+		static
+			string[sizeof str + 3*11 - 3*2];
+	 
+		format(string, sizeof string, str,
+			pInfo[playerid][pExp],
+			pInfo[playerid][pMoney],
+			pInfo[playerid][pID]
+		);
+	#endif
+
 	mysql_tquery(mysql_connect_ID, string, "", "");
 
 	return 1;
@@ -63,7 +88,9 @@ stock SaveExp(playerid)
 stock SaveHealth(playerid)
 {
 	if (!IsPlayerAuthorized(playerid))
+	{
 		return 0;
+	}
 
 	new
 		Float:health;
@@ -88,7 +115,9 @@ stock SaveHealth(playerid)
 stock SaveDeath(playerid)
 {
 	if (!IsPlayerAuthorized(playerid))
+	{
 		return 0;
+	}
 	
 	static const
 		str[] = "UPDATE `accounts` SET `pKillsLife` = '%i', `pKills` = '%i', `pTimeKill` = '%i', `pDeaths` = '%i' WHERE `pID` = '%i'";
@@ -111,10 +140,12 @@ stock SaveDeath(playerid)
 stock SaveWeapon(playerid)
 {
 	if (!IsPlayerAuthorized(playerid))
+	{
 		return 0;
+	}
 	
 	static const
-		str[] = "UPDATE `accounts` SET `pWeapons` = '%i|%i|%i', `pSecondWeapon` = '%i', `pAmmo` = '%i|%i' WHERE `pID` = '%i'";
+		str[] = "UPDATE `accounts` SET `pWeapons` = '%i|%i|%i', `pWeaponExp` = '%i|%i|%i', `pSecondWeapon` = '%i', `pAmmo` = '%i|%i' WHERE `pID` = '%i'";
 
 	static
 		string[sizeof str + MAX_WEAPONS*2 + MAX_WEAPONS*11 + 11 - 5*2];
@@ -123,6 +154,9 @@ stock SaveWeapon(playerid)
 		pInfo[playerid][pWeapons][0],
 		pInfo[playerid][pWeapons][1],
 		pInfo[playerid][pWeapons][2],
+		pInfo[playerid][pWeaponExp][0],
+		pInfo[playerid][pWeaponExp][1],
+		pInfo[playerid][pWeaponExp][2],
 		pInfo[playerid][pSecondWeapon],
 		pInfo[playerid][pAmmo][0],
 		pInfo[playerid][pAmmo][1],
@@ -133,10 +167,12 @@ stock SaveWeapon(playerid)
 	return 1;
 }
 
-stock SaveBackpackLvl(playerid)
+stock SaveBackpackLevel(playerid)
 {
 	if (!IsPlayerAuthorized(playerid))
+	{
 		return 0;
+	}
 	
 	static const
 		str[] = "UPDATE `accounts` SET `pBackpackLvl` = '%i', `pBackpackSize` = '%i' WHERE `pID` = '%i'";
@@ -145,7 +181,7 @@ stock SaveBackpackLvl(playerid)
 		string[sizeof str + 11*3 - 2*3];
  
 	format(string, sizeof string, str,
-		pInfo[playerid][pBackpackLvl],
+		pInfo[playerid][pBackpackLevel],
 		pInfo[playerid][pBackpackSize],
 		pInfo[playerid][pID]
 	);
@@ -157,13 +193,15 @@ stock SaveBackpackLvl(playerid)
 stock SaveBackpack(playerid)
 {
 	if (!IsPlayerAuthorized(playerid))
+	{
 		return 0;
+	}
 	
 	static const
 		str[] = "UPDATE `accounts` SET `pBackpackIndex` = '%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i', `pBackpackNumber` = '%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i' WHERE `pID` = '%i'";
 
 	static
-		string[sizeof str + MAX_BACKPACK_SLOTS*2 + MAX_BACKPACK_SLOTS*11 + 11 - MAX_BACKPACK_SLOTS*2 - 2];
+		string[sizeof str + LLSDM_MAX_BACKPACK_SLOTS*2 + LLSDM_MAX_BACKPACK_SLOTS*11 + 11 - LLSDM_MAX_BACKPACK_SLOTS*2 - 2];
  
 	format(string, sizeof string, str,
 		backpack_index[playerid][0],
@@ -214,7 +252,9 @@ stock SaveBackpack(playerid)
 stock SavePosition(playerid)
 {
 	if (!IsPlayerAuthorized(playerid))
+	{
 		return 0;
+	}
 	
 	static const
 		str[] = "UPDATE `accounts` SET `pPosition` = '%.02f|%.02f|%.02f|%.02f' WHERE `pID` = '%i'";
