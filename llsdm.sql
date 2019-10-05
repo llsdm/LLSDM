@@ -43,6 +43,7 @@ CREATE TABLE `accounts` (
   `pKillsLife` int(11) NOT NULL,
   `pDeaths` int(11) NOT NULL,
   `pWeapons` varchar(8) NOT NULL,
+  `pWeaponExp` varchar(100) NOT NULL,
   `pSecondWeapon` int(1) NOT NULL,
   `pAmmo` varchar(23) NOT NULL,
   `pBackpackLvl` int(3) NOT NULL,
