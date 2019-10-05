@@ -16,7 +16,9 @@ enum
 		pLife,
 		Float:pHealth,
 		Float:pLastDamage,
-		pExpLife,
+		#if LLSDM_RESPAWN_WITH_SAVED == 0
+			pExpLife,
+		#endif
 		pExp,
 		pMoney,
 		pBagMoney,
