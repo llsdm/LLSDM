@@ -28,7 +28,7 @@ enum
 		pSecondWeapon,
 		pAmmo[MAX_WEAPONS],
 		bool:pBag,
-		pBackpackLvl,
+		pBackpackLevel,
 		pBackpackSize,
 	};
 
